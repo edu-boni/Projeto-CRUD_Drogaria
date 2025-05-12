@@ -50,11 +50,11 @@ public class CreateMedicamentoServlet extends HttpServlet {
         if (dao.adicionarMedicamento(medicamento)) {
             msg = "Medicamento cadastrado com sucesso!";
             request.setAttribute("mensagem", msg);
-            request.setAttribute("class-alert", "alert alert-success");
+            request.setAttribute("classAlert", "alert alert-success");
         } else {
             msg = "Erro ao cadastrar o medicamento.";
             request.setAttribute("mensagem", msg);
-            request.setAttribute("class-alert", "alert alert-danger");
+            request.setAttribute("classAlert", "alert alert-danger");
         }
 
         request.getRequestDispatcher("index.jsp").forward(request, response);
