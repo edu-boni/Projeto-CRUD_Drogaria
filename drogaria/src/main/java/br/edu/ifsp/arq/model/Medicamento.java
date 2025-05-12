@@ -15,6 +15,7 @@ public class Medicamento implements Serializable {
 	private String dosagem;
 	private String forma;
 	private double preco;
+	private String url; // Url da imagem sera informada no cadastro para exibir na pagina inicial
 	
 	public Medicamento() {
 		this.id = ++proximo_id;
