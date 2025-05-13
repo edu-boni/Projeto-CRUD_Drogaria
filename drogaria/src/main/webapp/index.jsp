@@ -15,7 +15,7 @@
             <!-- Card 1 -->
             <div class="col-md-4 mb-4">
                 <div class="card hover-shadow">
-                    <img src="dorflex.png" class="card-img-top" alt="Dorflex">
+                    <img src="https://storage.googleapis.com/sicompra-files/uploads/catalogos/produtos/imagens/jpg/7891058017507.jpg"" class="card-img-top" alt="Dorflex">
                     <div class="card-body">
                         <h5 class="card-title">Dorflex</h5>
                         <p class="card-text">Analgesico e Relaxante Muscular.</p>

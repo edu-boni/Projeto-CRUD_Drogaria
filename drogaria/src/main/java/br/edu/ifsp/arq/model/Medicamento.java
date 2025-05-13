@@ -15,13 +15,13 @@ public class Medicamento implements Serializable {
 	private String dosagem;
 	private String forma;
 	private double preco;
-	private String url; // Url da imagem sera informada no cadastro para exibir na pagina inicial
+	private String imagem_url;
 	
 	public Medicamento() {
 		this.id = ++proximo_id;
 	}
 
-	public Medicamento(String nome, String principio_ativo, String fabricante, String validade, String lote, String indicacao, String dosagem, String forma, double preco) {
+	public Medicamento(String nome, String principio_ativo, String fabricante, String validade, String lote, String indicacao, String dosagem, String forma, double preco, String imagem_url) {
 		this();
 		this.nome = nome;
 		this.principio_ativo = principio_ativo;
@@ -32,6 +32,7 @@ public class Medicamento implements Serializable {
 		this.dosagem = dosagem;
 		this.forma = forma;
 		this.preco = preco;
+		this.imagem_url = imagem_url;
 	}
 
 	public String getNome() {
@@ -104,6 +105,14 @@ public class Medicamento implements Serializable {
 
 	public void setPreco(double preco) {
 		this.preco = preco;
+	}
+
+	public String getImagem_url() {
+		return imagem_url;
+	}
+
+	public void setImagem_url(String imagem_url) {
+		this.imagem_url = imagem_url;
 	}
 
 	public int getId() {

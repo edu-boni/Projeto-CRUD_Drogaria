@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-6 col-sm-12 mb-3">
                     <label for="cpf">CPF</label>
-                    <input type="text" id="cpf" name="cpf" class="form-control" required>
+                    <input type="text" id="cpf" name="cpf" class="form-control">
                 </div>
                 <div class="col-md-6 col-sm-12 mb-3">
                     <label for="email">Email</label>

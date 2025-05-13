@@ -31,6 +31,7 @@ public class CreateMedicamentoServlet extends HttpServlet {
 		String dosagem = request.getParameter("dosagem");
 		String forma = request.getParameter("forma");
 		String precoStr = request.getParameter("preco");
+		String imagem_url = request.getParameter("imagem_url");
 
 		double preco = 0.0;
 		try {
@@ -42,9 +43,7 @@ public class CreateMedicamentoServlet extends HttpServlet {
 		}
 
 		Medicamento medicamento = new Medicamento(
-			nome, principio, fabricante, validade, lote,
-			indicacao, dosagem, forma, preco
-		);
+			nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url);
 
 		MedicamentoDAO dao = MedicamentoDAO.getInstance();
         if (dao.adicionarMedicamento(medicamento)) {
