@@ -25,4 +25,27 @@ public class MedicamentoDAO {
 	public ArrayList<Medicamento> getMedicamentos(){
 		return this.listaDeMedicamentos;
 	}	
+	
+	public Medicamento getMedicamentoPorId(int id) {
+	    for (Medicamento m : listaDeMedicamentos) {
+	        if (m.getId() == id) return m;
+	    }
+	    return null;
+	}
+
+	public boolean atualizarMedicamento(int id, Medicamento novo) {
+	    for (int i = 0; i < listaDeMedicamentos.size(); i++) {
+	        Medicamento atual = listaDeMedicamentos.get(i);
+	        if (atual.getId() == id) {
+	            novo.setId(id);
+	            listaDeMedicamentos.set(i, novo);
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	public boolean removerMedicamentoPorId(int id) {
+	    return this.listaDeMedicamentos.removeIf(m -> m.getId() == id);
+	}
 }

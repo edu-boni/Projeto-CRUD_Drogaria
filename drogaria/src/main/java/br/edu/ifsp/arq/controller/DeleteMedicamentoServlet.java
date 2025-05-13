@@ -1,0 +1,41 @@
+package br.edu.ifsp.arq.controller;
+
+import br.edu.ifsp.arq.dao.MedicamentoDAO;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+@WebServlet("/DeleteMedicamentoServlet")
+public class DeleteMedicamentoServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String idStr = request.getParameter("id");
+        String msg;
+        int id;
+
+        try {
+            id = Integer.parseInt(idStr);
+            MedicamentoDAO dao = MedicamentoDAO.getInstance();
+            boolean removido = dao.removerMedicamentoPorId(id);
+            if (removido) {
+                msg = "Medicamento removido com sucesso!";
+                request.setAttribute("classAlert", "alert alert-success");
+            } else {
+                msg = "Medicamento não encontrado.";
+                request.setAttribute("classAlert", "alert alert-warning");
+            }
+        } catch (NumberFormatException e) {
+            msg = "ID inválido.";
+            request.setAttribute("classAlert", "alert alert-danger");
+        }
+
+        request.setAttribute("mensagem", msg);
+        request.getRequestDispatcher("/ReadMedicamentoServlet").forward(request, response);
+    }
+}

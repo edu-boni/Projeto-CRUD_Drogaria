@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet("/criar-medicamento")
+@WebServlet("/CreateMedicamentoServlet")
 public class CreateMedicamentoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -16,11 +16,11 @@ public class CreateMedicamentoServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-	/*	HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("usuarioLogado") == null) {
 			response.sendRedirect("erro.jsp");
 			return;
-		}*/
+		}
         String msg = "";
 		String nome = request.getParameter("nome");
 		String principio = request.getParameter("principio_ativo");
@@ -42,8 +42,7 @@ public class CreateMedicamentoServlet extends HttpServlet {
 			return;
 		}
 
-		Medicamento medicamento = new Medicamento(
-			nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url);
+		Medicamento medicamento = new Medicamento(nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url);
 
 		MedicamentoDAO dao = MedicamentoDAO.getInstance();
         if (dao.adicionarMedicamento(medicamento)) {
@@ -55,7 +54,8 @@ public class CreateMedicamentoServlet extends HttpServlet {
             request.setAttribute("mensagem", msg);
             request.setAttribute("classAlert", "alert alert-danger");
         }
-
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        
+		String url = "/ReadMedicamentoServlet";
+		getServletContext().getRequestDispatcher(url).forward(request, response);
 	}
 }

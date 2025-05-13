@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:import url="header.jsp"></c:import>
-<form action="criar-medicamento" method="post">
+<form action="CreateMedicamentoServlet" method="post">
     <label>Nome:</label><br>
     <input type="text" name="nome" required><br>
 
@@ -30,7 +30,7 @@
     <input type="text" name="forma" required><br>
 
     <label>Preço:</label><br>
-    <input type="text" name="preco" required><br><br>
+    <input type="number" name="preco" required><br><br>
 
     <input type="submit" value="Cadastrar">
 </form>

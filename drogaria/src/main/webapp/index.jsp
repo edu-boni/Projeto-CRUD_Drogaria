@@ -50,7 +50,7 @@
         </div>
 
     </section>
-
+	<%if (session.getAttribute("usuarioLogado") == null){ %>
     <!-- Modal de Login/Cadastro -->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -61,14 +61,17 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                
                 <div class="modal-body">
                     <p>Para acessar informações sobre este medicamento, por favor, faça login ou se cadastre.</p>
                     <a href="login.jsp" class="btn btn-primary">Fazer Login</a>
                     <a href="cadastrarADM.jsp" class="btn btn-secondary">Cadastrar-se</a>
                 </div>
+              
             </div>
         </div>
     </div>
+    <%} %>
 </main>
 
 <c:import url="footer.jsp"></c:import>
