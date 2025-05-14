@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="br.edu.ifsp.arq.model.Medicamento" %>
 <% Medicamento m = (Medicamento) request.getAttribute("medicamento"); %>
-<c:import url="header.jsp"></c:import>
+<c:import url="../include/header.jsp"></c:import>
 
 <form action="UpdateMedicamentoServlet" method="post">
     <input type="hidden" name="id" value="<%= m.getId() %>"/>
@@ -40,4 +40,4 @@
     <input type="submit" value="Atualizar">
 </form>
 
-<c:import url="footer.jsp"></c:import>
+<c:import url="../include/footer.jsp"></c:import>

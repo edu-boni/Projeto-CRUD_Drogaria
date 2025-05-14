@@ -3,7 +3,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:import url="header.jsp"></c:import>
+<c:import url="../include/header.jsp"></c:import>
 
 <main class="container mt-5">
     <section>
@@ -74,4 +74,4 @@
     <%} %>
 </main>
 
-<c:import url="footer.jsp"></c:import>
+<c:import url="../include/footer.jsp"></c:import>

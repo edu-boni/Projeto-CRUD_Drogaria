@@ -17,32 +17,32 @@
 <title>Drogaria</title>
 </head>
 <body>
-	<c:if test="${not empty mensagem}">
-		<div class="${classAlert}" role="alert">
-			<p>${mensagem}</p>
-		</div>
-	</c:if>
-
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="index.jsp">drogas drogas droguinhas</a>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav ml-auto">
-				<% if (session.getAttribute("usuarioLogado") != null) { %>
-				<li class="nav-item">
-					<a class="nav-link text-danger" href="#" data-toggle="modal" data-target="#logoutModal">Sair</a>
-				</li>
-				<% } else { %>
-				<li class="nav-item">
-					<a class="nav-link" href="login.jsp">Login</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="cadastrarADM.jsp">Cadastrar</a>
-				</li>
-				<% } %>
-			</ul>
-		</div>
-	</nav>
-
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="index.jsp">drogas drogas droguinhas</a>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ml-auto">
+					<% if (session.getAttribute("usuarioLogado") != null) { %>
+					<li class="nav-item">
+						<a class="nav-link text-danger" href="#" data-toggle="modal" data-target="#logoutModal">Sair</a>
+					</li>
+					<% } else { %>
+					<li class="nav-item">
+						<a class="nav-link" href="login.jsp">Login</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="cadastrarADM.jsp">Cadastrar</a>
+					</li>
+					<% } %>
+				</ul>
+			</div>
+		</nav>
+		<c:if test="${not empty mensagem}">
+			<div class="${classAlert}" role="alert">
+				<p>${mensagem}</p>
+			</div>
+		</c:if>
+	</header>
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
 		aria-labelledby="logoutModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">

@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<c:import url="../include/header.jsp"></c:import>
+
 <h2>Medicamentos Cadastrados</h2>
 
 <c:choose>
@@ -44,4 +46,7 @@
 </c:choose>
 
 <br>
-<a href="form-medicamento.jsp">Cadastrar novo medicamento</a>
+<a href="../medicamento/form-medicamento.jsp">Cadastrar novo medicamento</a>
+
+<c:import url="../include/footer.jsp"></c:import>
+
