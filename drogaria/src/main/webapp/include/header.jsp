@@ -24,6 +24,9 @@
 				<ul class="navbar-nav ml-auto">
 					<% if (session.getAttribute("usuarioLogado") != null) { %>
 					<li class="nav-item">
+						<a class="nav-link" href="./editar-administrador">Meu perfil </a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link text-danger" href="#" data-toggle="modal" data-target="#logoutModal">Sair</a>
 					</li>
 					<% } else { %>
@@ -31,7 +34,7 @@
 						<a class="nav-link" href="./adm/login.jsp">Login</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="cadastrar.jsp">Cadastrar</a>
+						<a class="nav-link" href="./adm/cadastrar.jsp">Cadastrar</a>
 					</li>
 					<% } %>
 				</ul>
@@ -59,7 +62,7 @@
 					<p>Deseja realmente sair?</p>
 				</div>
 				<div class="modal-footer">
-					<a href="logout.jsp" class="btn btn-danger">Sair</a>
+					<a href="./adm/logout.jsp" class="btn btn-danger">Sair</a>
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
 				</div>
 			</div>

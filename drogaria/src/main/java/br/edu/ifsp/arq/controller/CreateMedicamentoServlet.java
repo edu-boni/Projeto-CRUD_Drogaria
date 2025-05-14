@@ -18,7 +18,7 @@ public class CreateMedicamentoServlet extends HttpServlet {
 
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("usuarioLogado") == null) {
-			response.sendRedirect("erro.jsp");
+			response.sendRedirect("index.jsp");
 			return;
 		}
         String msg = "";

@@ -7,7 +7,7 @@
 
 <div class="container mt-5">
     <h2 class="mb-4">Editar Medicamento</h2>
-    <form action="../UpdateMedicamentoServlet" method="post" class="row g-3">
+    <form action="./UpdateMedicamentoServlet" method="post" class="row g-3">
         <input type="hidden" name="id" value="<%= m.getId() %>"/>
 
         <div class="col-md-6">

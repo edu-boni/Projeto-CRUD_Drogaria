@@ -19,6 +19,29 @@ public class AdministradorDAO {
 		return instance;
 	}
 	
+	public ArrayList<Administrador> getAdministrador(){
+		return this.listaDeAdministradores;
+	}	
+	
+	public Administrador getAdministradorPorId(int id) {
+	    for (Administrador a : listaDeAdministradores) {
+	        if (a.getId() == id) return a;
+	    }
+	    return null;
+	}
+	
+	public boolean atualizarAdministrador(int id, Administrador novo) {
+	    for (int i = 0; i < listaDeAdministradores.size(); i++) {
+	        Administrador atual = listaDeAdministradores.get(i);
+	        if (atual.getId() == id) {
+	            novo.setId(id);
+	            listaDeAdministradores.set(i, novo);
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
 	public boolean adicionarAdministrador(Administrador a) {
 		return this.listaDeAdministradores.add(a);
 	}

@@ -58,4 +58,14 @@ public class Administrador implements Serializable{
 	public int getId() {
 		return id;
 	}
+	
+	public void setId(int id) {
+	    this.id = id;
+	}
+	
+	@Override
+	public String toString() {
+	    return "Administrador{id=" + id + ", nome=" + nome + ", email=" + email + "}";
+	}
+
 }

@@ -1,14 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:import url="./include/header.jsp"></c:import>
+<c:import url="/include/header.jsp"></c:import>
 
 <main class="container mt-5">
     <section>
         <h1>Bem-vindo à Farmácia Online</h1>
         <p>Escolha um medicamento para mais informações.</p>
 
-        <!-- Verifica se o usuário está logado -->
         <% boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 
         <!-- Catálogo de Medicamentos -->
@@ -71,7 +70,7 @@
         <!-- Exibe o botão de adicionar medicamento apenas se o usuário estiver logado -->
         <% if (usuarioLogado) { %>
             <div class="text-end mt-4">
-                <a href="/medicamento/form-medicamento.jsp" class="btn btn-success">
+                <a href="medicamento/form-medicamento.jsp" class="btn btn-success">
                     <i class="fas fa-plus"></i> Adicionar Medicamento
                 </a>
             </div>
@@ -93,8 +92,8 @@
                 
                 <div class="modal-body">
                     <p>Para acessar informações sobre este medicamento, por favor, faça login ou se cadastre.</p>
-                    <a href="./adm/login.jsp" class="btn btn-primary">Fazer Login</a>
-                    <a href="./adm/cadastrar.jsp" class="btn btn-secondary">Cadastrar-se</a>
+                    <a href="/adm/login.jsp" class="btn btn-primary">Fazer Login</a>
+                    <a href="/adm/cadastrar.jsp" class="btn btn-secondary">Cadastrar-se</a>
                 </div>
               
             </div>
@@ -103,4 +102,4 @@
     <% } %>
 </main>
 
-<c:import url="./include/footer.jsp"></c:import>
+<c:import url="/include/footer.jsp"></c:import>
