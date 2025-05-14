@@ -25,14 +25,14 @@ public class DeleteMedicamentoServlet extends HttpServlet {
             boolean removido = dao.removerMedicamentoPorId(id);
             if (removido) {
                 msg = "Medicamento removido com sucesso!";
-                request.setAttribute("classAlert", "alert alert-success");
+                request.setAttribute("classAlert", "p-0 alert alert-success");
             } else {
                 msg = "Medicamento não encontrado.";
-                request.setAttribute("classAlert", "alert alert-warning");
+                request.setAttribute("classAlert", "p-0 alert alert-warning");
             }
         } catch (NumberFormatException e) {
             msg = "ID inválido.";
-            request.setAttribute("classAlert", "alert alert-danger");
+            request.setAttribute("classAlert", "p-0 alert alert-danger");
         }
 
         request.setAttribute("mensagem", msg);

@@ -19,7 +19,7 @@ public class ReadMedicamentoServlet extends HttpServlet {
         ArrayList<Medicamento> lista = dao.getMedicamentos();
 
         request.setAttribute("listaMedicamentos", lista);
-        request.getRequestDispatcher("listar-medicamentos.jsp").forward(request, response);
+        request.getRequestDispatcher("/medicamento/listar-medicamentos.jsp").forward(request, response);
     }
     
     @Override

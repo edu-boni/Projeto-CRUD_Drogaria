@@ -23,7 +23,11 @@ public class UpdateMedicamentoServlet extends HttpServlet {
             try {
                 id = Integer.parseInt(request.getParameter("id"));
             } catch (NumberFormatException e) {
-                response.sendRedirect("erro.jsp");
+                // Usa sessão para manter padrão com doPost
+                HttpSession session = request.getSession();
+                session.setAttribute("mensagem", "ID inválido.");
+                session.setAttribute("classAlert", "p-0 alert alert-danger");
+                response.sendRedirect("ReadMedicamentoServlet");
                 return;
             }
 
@@ -32,9 +36,13 @@ public class UpdateMedicamentoServlet extends HttpServlet {
 
             if (m != null) {
                 request.setAttribute("medicamento", m);
-                request.getRequestDispatcher("editar-medicamento.jsp").forward(request, response);
+                request.getRequestDispatcher("medicamento/editar-medicamento.jsp").forward(request, response);
             } else {
-                response.sendRedirect("erro.jsp");
+                // Medicamento não encontrado
+                HttpSession session = request.getSession();
+                session.setAttribute("mensagem", "Medicamento não encontrado.");
+                session.setAttribute("classAlert", "p-0 alert alert-danger");
+                response.sendRedirect("ReadMedicamentoServlet");
             }
         }
     }

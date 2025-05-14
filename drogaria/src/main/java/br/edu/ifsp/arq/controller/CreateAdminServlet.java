@@ -37,14 +37,14 @@ public class CreateAdminServlet extends HttpServlet {
 		if(nome.isEmpty() || email.isEmpty() || senha.isEmpty()){
 			msg = "Nome, email e senha obrigatórios" ;
 			request.setAttribute("mensagem", msg);
-			request.setAttribute("classAlert","alert alert-danger");
+			request.setAttribute("classAlert","p-0 alert alert-danger");
 			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
 		}else{
 			Administrador a = new Administrador(nome, email, cpf, senha);
 			if(dao.adicionarAdministrador(a)) {
 				msg = "Perfil criado com sucesso. Novo administrador: "+nome;
 				request.setAttribute("mensagem", msg);
-				request.setAttribute("classAlert","alert alert-success");
+				request.setAttribute("classAlert","p-0 alert alert-success");
 			};
 			
 			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);

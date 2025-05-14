@@ -35,15 +35,15 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("usuarioLogado", admin);
                 msg = "Login realizado com sucesso!";
                 request.setAttribute("mensagem", msg);
-                request.setAttribute("classAlert", "alert alert-success");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+                request.setAttribute("classAlert", "p-0 alert alert-success");
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
                 return;
             }
         }
 
         msg = "Email ou senha inválidos.";
         request.setAttribute("mensagem", msg);
-        request.setAttribute("classAlert", "alert alert-danger");
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.setAttribute("classAlert", "p-0 alert alert-danger");
+        request.getRequestDispatcher("/adm/login.jsp").forward(request, response);
     }
 }

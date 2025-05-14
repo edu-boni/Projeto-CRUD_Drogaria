@@ -28,20 +28,22 @@
 					</li>
 					<% } else { %>
 					<li class="nav-item">
-						<a class="nav-link" href="login.jsp">Login</a>
+						<a class="nav-link" href="./adm/login.jsp">Login</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="cadastrarADM.jsp">Cadastrar</a>
+						<a class="nav-link" href="cadastrar.jsp">Cadastrar</a>
 					</li>
 					<% } %>
 				</ul>
 			</div>
 		</nav>
+		<div class="container">
 		<c:if test="${not empty mensagem}">
 			<div class="${classAlert}" role="alert">
 				<p>${mensagem}</p>
 			</div>
 		</c:if>
+		</div>
 	</header>
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
 		aria-labelledby="logoutModalLabel" aria-hidden="true">

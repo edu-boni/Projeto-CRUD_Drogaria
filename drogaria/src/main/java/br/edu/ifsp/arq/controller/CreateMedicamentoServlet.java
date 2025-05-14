@@ -38,7 +38,7 @@ public class CreateMedicamentoServlet extends HttpServlet {
 			preco = Double.parseDouble(precoStr);
 		} catch (NumberFormatException e) {
 			request.setAttribute("erro", "Preço inválido.");
-			request.getRequestDispatcher("index.jsp").forward(request, response);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 			return;
 		}
 
@@ -48,11 +48,11 @@ public class CreateMedicamentoServlet extends HttpServlet {
         if (dao.adicionarMedicamento(medicamento)) {
             msg = "Medicamento cadastrado com sucesso!";
             request.setAttribute("mensagem", msg);
-            request.setAttribute("classAlert", "alert alert-success");
+            request.setAttribute("classAlert", "p-0 alert alert-success");
         } else {
             msg = "Erro ao cadastrar o medicamento.";
             request.setAttribute("mensagem", msg);
-            request.setAttribute("classAlert", "alert alert-danger");
+            request.setAttribute("classAlert", "p-0 alert alert-danger");
         }
         
 		String url = "/ReadMedicamentoServlet";

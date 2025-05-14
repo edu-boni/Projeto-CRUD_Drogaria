@@ -8,7 +8,7 @@
 <main class="container mt-5">
     <section>
         <h1>Cadastro de Administrador</h1>
-        <form action="CreateAdminServlet" method="post">
+        <form action="../CreateAdminServlet" method="post">
             <div class="form-row">
                 <div class="col-md-6 col-sm-12 mb-3">
                     <label for="nome">Nome</label>

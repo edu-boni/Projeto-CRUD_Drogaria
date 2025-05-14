@@ -5,7 +5,7 @@
 <main class="container mt-5">
     <h2>Login do Administrador</h2>
 
-    <form action="LoginServlet" method="post">
+    <form action="../LoginServlet" method="post">
         <div class="mb-3">
             <label for="email" class="form-label">E-mail:</label>
             <input type="email" name="email" class="form-control" required />
