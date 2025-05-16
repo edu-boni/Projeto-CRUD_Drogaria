@@ -48,4 +48,15 @@ public class MedicamentoDAO {
 	public boolean removerMedicamentoPorId(int id) {
 	    return this.listaDeMedicamentos.removeIf(m -> m.getId() == id);
 	}
+	
+	public ArrayList<Medicamento> buscarPorNome(String nomeBuscado) {
+	    ArrayList<Medicamento> resultados = new ArrayList<>();
+	    for (Medicamento m : listaDeMedicamentos) {
+	        if (m.getNome().toLowerCase().contains(nomeBuscado.toLowerCase())) {
+	            resultados.add(m);
+	        }
+	    }
+	    return resultados;
+	}
+
 }

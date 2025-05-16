@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+.promo-banner {
+    overflow: hidden;
+    position: relative;
+    border-radius: 20px;
+}
+
+.promo-banner .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.0); /* transparente por padrão */
+    transition: background-color 0.4s ease;
+    z-index: 1;
+}
+
+.promo-banner:hover .overlay {
+    background-color: rgba(0, 0, 0, 0.4); /* escurece no hover */
+}

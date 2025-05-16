@@ -50,7 +50,12 @@
             <label for="preco" class="form-label">Preço</label>
             <input type="number" step="0.01" class="form-control" id="preco" name="preco" required>
         </div>
-
+        
+		<div class="col-md-6">
+            <label for="imagem_url" class="form-label">URL da Imagem</label>
+            <input type="url" class="form-control" id="imagem_url" name="imagem_url" maxlength="255">
+        </div>
+        
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
