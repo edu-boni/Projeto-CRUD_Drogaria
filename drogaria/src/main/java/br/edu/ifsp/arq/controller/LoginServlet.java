@@ -25,25 +25,37 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
-        String msg = "";
-        boolean autenticado = false;
-
+        String msg;
+        Administrador encontrado = null;
+        
         for (Administrador admin : dao.getAdministradores()) {
-            if (admin.getEmail().equals(email) && admin.getSenha().equals(senha)) {
-                autenticado = true;
-                HttpSession session = request.getSession();
-                session.setAttribute("usuarioLogado", admin);
-                msg = "Login realizado com sucesso!";
-                request.setAttribute("mensagem", msg);
-                request.setAttribute("classAlert", "p-0 alert alert-success");
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
-                return;
+            if (admin.getEmail().equalsIgnoreCase(email)) {
+                encontrado = admin;
+                break;
             }
         }
 
-        msg = "Email ou senha inválidos.";
-        request.setAttribute("mensagem", msg);
-        request.setAttribute("classAlert", "p-0 alert alert-danger");
-        request.getRequestDispatcher("/adm/login.jsp").forward(request, response);
+        if (encontrado == null) {
+            msg = "E-mail não cadastrado.";
+            request.setAttribute("mensagem", msg);
+            request.setAttribute("classAlert", "p-0 alert alert-danger");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            return;
+        }
+
+        if (encontrado.getSenha().equals(senha)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("usuarioLogado", encontrado);
+
+            msg = "Login realizado com sucesso!";
+            request.setAttribute("mensagem", msg);
+            request.setAttribute("classAlert", "p-0 alert alert-success");
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        } else {
+            msg = "Senha incorreta.";
+            request.setAttribute("mensagem", msg);
+            request.setAttribute("classAlert", "p-0 alert alert-danger");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
+        }
     }
 }

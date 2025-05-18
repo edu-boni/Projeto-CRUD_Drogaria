@@ -38,7 +38,7 @@ public class CreateAdminServlet extends HttpServlet {
 			msg = "Nome, email e senha obrigatórios" ;
 			request.setAttribute("mensagem", msg);
 			request.setAttribute("classAlert","p-0 alert alert-danger");
-			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/cadastro.jsp").forward(request, response);
 		}else{
 			Administrador a = new Administrador(nome, email, cpf, senha);
 			if(dao.adicionarAdministrador(a)) {
@@ -47,7 +47,7 @@ public class CreateAdminServlet extends HttpServlet {
 				request.setAttribute("classAlert","p-0 alert alert-success");
 			};
 			
-			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
 		}
 	}
 
