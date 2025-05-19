@@ -25,7 +25,7 @@ public class DeleteMedicamentoServlet extends HttpServlet {
             boolean removido = dao.removerMedicamentoPorId(id);
             if (removido) {
                 msg = "Medicamento removido com sucesso!";
-                request.setAttribute("classAlert", "p-0 alert alert-success");
+                request.setAttribute("classAlert", "p-0 alert alert-danger");
             } else {
                 msg = "Medicamento não encontrado.";
                 request.setAttribute("classAlert", "p-0 alert alert-warning");

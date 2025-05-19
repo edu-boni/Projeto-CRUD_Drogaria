@@ -1,87 +1,76 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="br.edu.ifsp.arq.model.Medicamento"%>
-<% Medicamento m = (Medicamento) request.getAttribute("medicamento"); %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 
-<c:import url="../include/header.jsp"></c:import>
+<% String contextPath = request.getContextPath(); %>
 
-<div class="container mt-5">
-	<h2 class="mb-4">Editar Medicamento</h2>
-	<form action="./UpdateMedicamentoServlet" method="post" class="row g-3">
-		<input type="hidden" name="id" value="<%= m.getId() %>" />
+<div class="modal fade" id="modal-${param.id}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-${param.id}" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form action="<%= contextPath %>/UpdateMedicamentoServlet" method="post" class="row p-4">
+        <div class="modal-header col-12">
+          <h5 class="modal-title" id="modalLabel-${param.id}">Editar Medicamento</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
 
-		<div class="col-md-6">
-			<label for="nome" class="form-label">Nome</label> <input type="text"
-				class="form-control" id="nome" name="nome"
-				value="<%= m.getNome() %>" required maxlength="100"
-				placeholder="Ex: Paracetamol">
-		</div>
+        <!-- Hidden ID -->
+        <input type="hidden" name="id" value="${param.id}" />
 
-		<div class="col-md-6">
-			<label for="principio_ativo" class="form-label">Princípio
-				Ativo</label> <input type="text" class="form-control" id="principio_ativo"
-				name="principio_ativo" value="<%= m.getPrincipio_ativo() %>"
-				required maxlength="100" placeholder="Ex: Paracetamol">
-		</div>
+        <div class="col-md-6 mb-3 mt-3">
+          <label for="nome-${param.id}" class="form-label">Nome</label>
+          <input type="text" class="form-control" id="nome-${param.id}" name="nome" value="${param.nome}" required>
+        </div>
 
-		<div class="col-md-6">
-			<label for="fabricante" class="form-label">Fabricante</label> <input
-				type="text" class="form-control" id="fabricante" name="fabricante"
-				value="<%= m.getFabricante() %>" maxlength="100"
-				placeholder="Ex: EMS">
-		</div>
+        <div class="col-md-6 mb-3 mt-3">
+          <label for="principio_ativo-${param.id}" class="form-label">Princípio Ativo</label>
+          <input type="text" class="form-control" id="principio_ativo-${param.id}" name="principio_ativo" value="${param.principio_ativo}" required>
+        </div>
 
-		<div class="col-md-6">
-			<label for="validade" class="form-label">Validade</label> <input
-				type="date" class="form-control" id="validade" name="validade"
-				value="<%= m.getValidade() %>" required>
-		</div>
+        <div class="col-md-6 mb-3">
+          <label for="fabricante-${param.id}" class="form-label">Fabricante</label>
+          <input type="text" class="form-control" id="fabricante-${param.id}" name="fabricante" value="${param.fabricante}" required>
+        </div>
 
-		<div class="col-md-6">
-			<label for="lote" class="form-label">Lote</label> <input type="text"
-				class="form-control" id="lote" name="lote"
-				value="<%= m.getLote() %>" maxlength="50" placeholder="Ex: 12345">
-		</div>
+        <div class="col-md-6 mb-3">
+          <label for="validade-${param.id}" class="form-label">Validade</label>
+          <input type="date" class="form-control" id="validade-${param.id}" name="validade" value="${param.validade}" required>
+        </div>
 
-		<div class="col-md-6">
-			<label for="indicacao" class="form-label">Indicação</label> <input
-				type="text" class="form-control" id="indicacao" name="indicacao"
-				value="<%= m.getIndicacao() %>" maxlength="200"
-				placeholder="Ex: Dor e febre">
-		</div>
+        <div class="col-md-6 mb-3">
+          <label for="lote-${param.id}" class="form-label">Lote</label>
+          <input type="text" class="form-control" id="lote-${param.id}" name="lote" value="${param.lote}" required>
+        </div>
 
-		<div class="col-md-6">
-			<label for="dosagem" class="form-label">Dosagem</label> <input
-				type="text" class="form-control" id="dosagem" name="dosagem"
-				value="<%= m.getDosagem() %>" maxlength="50"
-				placeholder="Ex: 500 mg">
-		</div>
+        <div class="col-md-6 mb-3">
+          <label for="indicacao-${param.id}" class="form-label">Indicação</label>
+          <input type="text" class="form-control" id="indicacao-${param.id}" name="indicacao" value="${param.indicacao}" required>
+        </div>
 
-		<div class="col-md-6">
-			<label for="forma" class="form-label">Forma</label> <input
-				type="text" class="form-control" id="forma" name="forma"
-				value="<%= m.getForma() %>" maxlength="50"
-				placeholder="Ex: Comprimido">
-		</div>
+        <div class="col-md-6 mb-3">
+          <label for="dosagem-${param.id}" class="form-label">Dosagem</label>
+          <input type="text" class="form-control" id="dosagem-${param.id}" name="dosagem" value="${param.dosagem}" required>
+        </div>
 
-		<div class="col-md-6">
-			<label for="preco" class="form-label">Preço (R$)</label> <input
-				type="number" class="form-control" id="preco" name="preco"
-				value="<%= m.getPreco() %>" step="0.01" min="0" required
-				placeholder="Ex: 10.99">
-		</div>
+        <div class="col-md-6 mb-3">
+          <label for="forma-${param.id}" class="form-label">Forma</label>
+          <input type="text" class="form-control" id="forma-${param.id}" name="forma" value="${param.forma}" required>
+        </div>
 
-		<div class="col-md-12">
-			<label for="imagem_url" class="form-label">URL da Imagem</label> <input
-				type="url" class="form-control" id="imagem_url" name="imagem_url"
-				value="<%= m.getImagem_url() %>" maxlength="255">
-		</div>
+        <div class="col-md-6 mb-3">
+          <label for="preco-${param.id}" class="form-label">Preço</label>
+          <input type="number" step="0.01" class="form-control" id="preco-${param.id}" name="preco" value="${param.preco}" required>
+        </div>
 
-		<div class="col-12">
-			<button type="submit" class="btn btn-primary">Atualizar</button>
-		</div>
-	</form>
+        <div class="col-md-6 mb-3">
+          <label for="imagem_url-${param.id}" class="form-label">URL da Imagem</label>
+          <input type="url" class="form-control" id="imagem_url-${param.id}" name="imagem_url" value="${param.imagem_url}" maxlength="255">
+        </div>
+
+        <div class="col-12 d-flex justify-content-between mt-3">
+          <a href="<%= contextPath %>/DeleteMedicamentoServlet?id=${param.id}" class="btn btn-danger">Excluir</a>
+          <button type="submit" class="btn bg-cyan">Salvar opções</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
-
-<c:import url="../include/footer.jsp"></c:import>

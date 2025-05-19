@@ -64,78 +64,19 @@ boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 					
 					<% if (usuarioLogado) { %>
 					<!-- Início do modal -->
-		             <div class="modal fade" id="modal-${med.id}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-${med.id}" aria-hidden="true">
-					  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-					    <div class="modal-content">
-					      <form action="/drogaria/medicamento/editar" method="post" class="row p-4">
-					        <div class="modal-header col-12">
-					          <h5 class="modal-title" id="modalLabel-${med.id}">Editar Medicamento</h5>
-					          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-					            <span aria-hidden="true">&times;</span>
-					          </button>
-					        </div>
-					
-					        <!-- Hidden ID -->
-					        <input type="hidden" name="id" value="${med.id}" />
-					
-					        <div class="col-md-6 mb-3 mt-3">
-					          <label for="nome-${med.id}" class="form-label">Nome</label>
-					          <input type="text" class="form-control" id="nome-${med.id}" name="nome" value="${med.nome}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3 mt-3">
-					          <label for="principio_ativo-${med.id}" class="form-label">Princípio Ativo</label>
-					          <input type="text" class="form-control" id="principio_ativo-${med.id}" name="principio_ativo" value="${med.principio_ativo}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="fabricante-${med.id}" class="form-label">Fabricante</label>
-					          <input type="text" class="form-control" id="fabricante-${med.id}" name="fabricante" value="${med.fabricante}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="validade-${med.id}" class="form-label">Validade</label>
-					          <input type="date" class="form-control" id="validade-${med.id}" name="validade" value="${med.validade}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="lote-${med.id}" class="form-label">Lote</label>
-					          <input type="text" class="form-control" id="lote-${med.id}" name="lote" value="${med.lote}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="indicacao-${med.id}" class="form-label">Indicação</label>
-					          <input type="text" class="form-control" id="indicacao-${med.id}" name="indicacao" value="${med.indicacao}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="dosagem-${med.id}" class="form-label">Dosagem</label>
-					          <input type="text" class="form-control" id="dosagem-${med.id}" name="dosagem" value="${med.dosagem}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="forma-${med.id}" class="form-label">Forma</label>
-					          <input type="text" class="form-control" id="forma-${med.id}" name="forma" value="${med.forma}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="preco-${med.id}" class="form-label">Preço</label>
-					          <input type="number" step="0.01" class="form-control" id="preco-${med.id}" name="preco" value="${med.preco}" required>
-					        </div>
-					
-					        <div class="col-md-6 mb-3">
-					          <label for="imagem_url-${med.id}" class="form-label">URL da Imagem</label>
-					          <input type="url" class="form-control" id="imagem_url-${med.id}" name="imagem_url" value="${med.imagem_url}" maxlength="255">
-					        </div>
-					
-					        <div class="col-12 d-flex justify-content-between mt-3">
-					          <a href="/drogaria/medicamento/excluir?id=${med.id}" class="btn btn-danger">Excluir</a>
-					          <button type="submit" class="btn bg-cyan">Salvar opções</button>
-					        </div>
-					      </form>
-					    </div>
-					  </div>
-					 </div>
+		            <c:import url="editar-medicamento.jsp">
+					    <c:param name="id" value="${med.id}" />
+					    <c:param name="nome" value="${med.nome}" />
+					    <c:param name="principio_ativo" value="${med.principio_ativo}" />
+					    <c:param name="fabricante" value="${med.fabricante}" />
+					    <c:param name="validade" value="${med.validade}" />
+					    <c:param name="lote" value="${med.lote}" />
+					    <c:param name="indicacao" value="${med.indicacao}" />
+					    <c:param name="dosagem" value="${med.dosagem}" />
+					    <c:param name="forma" value="${med.forma}" />
+					    <c:param name="preco" value="${med.preco}" />
+					    <c:param name="imagem_url" value="${med.imagem_url}" />
+					  </c:import>
 					 <% } %>
 				</c:forEach>
 			</div>
