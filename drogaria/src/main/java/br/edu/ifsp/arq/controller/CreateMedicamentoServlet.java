@@ -60,7 +60,6 @@ public class CreateMedicamentoServlet extends HttpServlet {
             request.setAttribute("classAlert", "p-0 alert alert-danger");
         }
 
-        String url = "/ReadMedicamentoServlet";
-        getServletContext().getRequestDispatcher(url).forward(request, response);
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 }

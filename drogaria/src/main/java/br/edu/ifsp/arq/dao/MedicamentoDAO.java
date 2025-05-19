@@ -7,7 +7,7 @@ public class MedicamentoDAO {
 	private static MedicamentoDAO instance;
 	private ArrayList<Medicamento> listaDeMedicamentos;
 	
-	public MedicamentoDAO() {
+	private MedicamentoDAO() {
 		this.listaDeMedicamentos = new ArrayList<Medicamento>();
 	}
 	

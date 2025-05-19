@@ -2,7 +2,8 @@
 	pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%String contextPath = request.getContextPath();%>
+
+<% String contextPath = request.getContextPath(); %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -47,9 +48,9 @@
 			  boolean usuarioLogado = session.getAttribute("usuarioLogado") != null;
 			  String larguraBusca = usuarioLogado ? "400px" : "600px";
 			%>
-	        <form action="buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0" style="max-width: <%= larguraBusca %>; width: 100%;">
+	        <form action="<%= contextPath %>/buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0" style="max-width: <%= larguraBusca %>; width: 100%;">
 	          <div class="input-group w-100">
-	            <input name="search" class="form-control rounded-left" type="search" placeholder="Buscar" aria-label="Buscar">
+	            <input name="search" class="form-control rounded-left" type="search" placeholder="Buscar" aria-label="Buscar" minlength="3" required>
 	            <div class="input-group-append">
 	              <button class="btn btn-light rounded-right" type="submit">
 	                <i class="fas fa-search"></i>

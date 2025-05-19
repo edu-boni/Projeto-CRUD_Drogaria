@@ -1,25 +1,10 @@
 @charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-.promo-banner {
-	overflow: hidden;
-	position: relative;
-	border-radius: 20px;
+body {
+  font-family: 'Inter', sans-serif;
 }
 
-.promo-banner .overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	background-color: rgba(0, 0, 0, 0.0); /* transparente por padrão */
-	transition: background-color 0.4s ease;
-	z-index: 1;
-}
-
-.promo-banner:hover .overlay {
-	background-color: rgba(0, 0, 0, 0.4); /* escurece no hover */
-}
 
 .vantagem {
 	min-height: 130px;
@@ -31,6 +16,22 @@
 	color: white;
 }
 
+.bg-cyan-light{
+	background-color: #E8F5F2;
+}
+
 .txt-cyan {
 	color: #6FB2A4;
+}
+
+.custom-gradient {
+	background: linear-gradient(to right,
+		rgba(255, 255, 255, 0.4) 0%,
+		rgba(255, 255, 255, 0.2) 20%,
+		rgba(111, 178, 164, 1) 100%);
+	border: none;
+}
+
+.hover-card:hover{
+	cursor: pointer;
 }
