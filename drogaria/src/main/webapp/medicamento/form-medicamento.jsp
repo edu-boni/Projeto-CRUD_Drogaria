@@ -11,7 +11,7 @@
 		<form action="../CreateMedicamentoServlet" method="post" class="row">
 			<div class="col-md-6 mb-3">
 				<label for="nome" class="form-label">Nome</label> <input type="text"
-					class="form-control" id="nome" name="nome" required>
+					class="form-control" id="nome" name="nome" minlength="3" required>
 			</div>
 	
 			<div class="col-md-6 mb-3">

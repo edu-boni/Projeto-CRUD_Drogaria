@@ -83,10 +83,10 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary">Salvar nova
-						senha</button>
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn bg-cyan">Salvar nova
+						senha</button>
 				</div>
 			</form>
 		</div>

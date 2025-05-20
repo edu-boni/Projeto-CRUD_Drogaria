@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-
 <% String contextPath = request.getContextPath(); %>
 
 <div class="modal fade" id="modal-${param.id}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-${param.id}" aria-hidden="true">

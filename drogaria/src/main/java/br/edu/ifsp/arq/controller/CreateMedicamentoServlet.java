@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/CreateMedicamentoServlet")
 public class CreateMedicamentoServlet extends HttpServlet {
@@ -47,6 +48,7 @@ public class CreateMedicamentoServlet extends HttpServlet {
         Medicamento medicamento = new Medicamento(nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url);
 
         MedicamentoDAO dao = MedicamentoDAO.getInstance();
+        
         if (dao.adicionarMedicamento(medicamento)) {
             msg = "Medicamento cadastrado com sucesso!";
             request.setAttribute("mensagem", msg);

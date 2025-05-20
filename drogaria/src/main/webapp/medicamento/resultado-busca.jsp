@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <c:import url="../include/header.jsp"></c:import>
 
@@ -49,19 +50,19 @@ boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 								<p class="card-text mb-2">
 									<strong>Preço:</strong>
 									<% if(usuarioLogado){ %>
-					                	<span class="text-secondary" style="text-decoration: line-through">R$ ${med.preco}</span> R$ ${med.preco*0.9} <span class="text-danger col-md-6"><i class="fas fa-solid fa-tag"></i> -10%</span>
-					                	</div>
-					                <% }else{ %>
-					               		<span>R$ ${med.preco}</span>
-					                <% } %>
+								    	<span class="text-secondary" style="text-decoration: line-through">
+								    		R$ <fmt:formatNumber value="${med.preco}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+								    	</span>
+								    	R$ <fmt:formatNumber value="${med.preco * 0.9}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+								    	<span class="text-danger col-md-6"><i class="fas fa-solid fa-tag"></i> -10%</span>
+									<% } else { %>
+								    	<span>R$ <fmt:formatNumber value="${med.preco}" type="number" minFractionDigits="2" maxFractionDigits="2"/></span>
+									<% } %>
 								</p>
 							</div>
 						</div>
 					</div>
-					<% if(!usuarioLogado){ %>
-					</div>
-					<% } %>
-					
+					</div>	
 					<% if (usuarioLogado) { %>
 					<!-- Início do modal -->
 		            <c:import url="editar-medicamento.jsp">

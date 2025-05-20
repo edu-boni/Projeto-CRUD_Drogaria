@@ -72,10 +72,16 @@
 	          <% if (session.getAttribute("usuarioLogado") != null) {
 	               Administrador usuario = (Administrador) session.getAttribute("usuarioLogado");
 	          %>
-	            <li class="nav-item mx-1">
-	              <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/medicamento/form-medicamento.jsp">
-	                <i class="fas fa-plus-circle"></i> Novo remédio
+	            <li class="nav-item dropdown mx-1">
+	              <a class="nav-link dropdown-toggle text-white font-weight-bold" href="#" id="navbarDropdownRemedio" role="button"
+	                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                <i class="fas fa-pills mr-1"></i> Medicamentos
 	              </a>
+	              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+		              <a class="dropdown-item" href="<%= contextPath %>/medicamento/form-medicamento.jsp">Adicionar novo remédio</a>	           
+		              <div class="dropdown-divider"></div>
+		              <a class="dropdown-item" href="<%= contextPath %>/medicamento/listar-medicamentos.jsp">Ver todos</a>
+	              </div>
 	            </li>
 	
 	            <li class="nav-item dropdown mx-1">

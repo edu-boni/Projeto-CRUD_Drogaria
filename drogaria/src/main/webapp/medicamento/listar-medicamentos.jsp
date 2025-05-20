@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <c:import url="../include/header.jsp"></c:import>
 
@@ -12,10 +13,10 @@
 	
 	<c:choose>
 		<c:when test="${empty listaMedicamentos}">
-		<a href="<%= contextPath %>/medicamento/form-medicamento.jsp" class="btn w-100 bg-cyan custom-gradient p-3 text-right font-weight-bold"> <i class="fas fa-plus-circle"></i> Cadastrar medicamento</a>
-		<div class="container p-3 bg-light">
-	        <p class="text-center text m-1">Nenhum medicamento encontrado :/</p>
-	    </div>
+		<div class="col-md-12 d-flex">
+			<h2 class="txt-cyan col-md-6">Nenhum medicamento encontrado</h2>
+			 <a href="<%= contextPath %>/medicamento/form-medicamento.jsp" class="btn col-md-6 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0"> <i class="fas fa-plus-circle"></i> Cadastrar medicamento</a>
+		</div>
 		</c:when>
 		<c:otherwise>
 			<div class="col-md-12 d-flex">
@@ -38,14 +39,19 @@
 				            <p class="txt-cyan" style="font-size: 20px; font-weight: bold; margin: 0">${med.nome}</p>
 				            <p class="txt-cyan" style="margin: 0">${med.dosagem}</p>
 							<% if(usuarioLogado){ %>
-			                	<p class="mt-1 mb-0 text-secondary" style="font-size: 15px; text-decoration: line-through">R$ ${med.preco}</p>
-			                	<div class="d-flex space-between align-items-center" style="font-size: 20px; font-weight: bold">
-			                		<p>R$ ${med.preco*0.9}</p>
-			                		<p class="text-danger col-md-6"><i class="fas fa-solid fa-tag"></i> -10%</p>
-			                	</div>
-			                <% }else{ %>
-			               		<p class="mt-1 mb-0" style="font-size: 20px; font-weight: bold">R$ ${med.preco}</p>
-			                <% } %>				        </div>
+							    <p class="mt-1 mb-0 text-secondary" style="font-size: 15px; text-decoration: line-through">
+							        R$ <fmt:formatNumber value="${med.preco}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+							    </p>
+							    <div class="d-flex space-between align-items-center" style="font-size: 20px; font-weight: bold">
+							        <p>R$ <fmt:formatNumber value="${med.preco * 0.9}" type="number" minFractionDigits="2" maxFractionDigits="2"/></p>
+							        <p class="text-danger col-md-6"><i class="fas fa-solid fa-tag"></i> -10%</p>
+							    </div>
+							<% }else{ %>
+							    <p class="mt-1 mb-0" style="font-size: 20px; font-weight: bold">
+							        R$ <fmt:formatNumber value="${med.preco}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+							    </p>
+							<% } %>
+			          	</div>
 				    </div>
 				    
 				   <!-- Início do modal -->
