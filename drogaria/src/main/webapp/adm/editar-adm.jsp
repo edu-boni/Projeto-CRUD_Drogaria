@@ -52,7 +52,7 @@
 		</div>
 
 		<div class="form-group col-md-12 d-flex justify-content-between mt-3">
-			<a href="./DeleteADMServlet?id=<%= a.getId() %>" class="btn btn-danger col-md-5">Excluir Conta</a>
+			<a href="<%= contextPath %>/DeleteADMServlet?id=<%= a.getId() %>" class="btn btn-danger col-md-5">Excluir Conta</a>
 			<button type="submit" class="btn bg-cyan col-md-5">Atualizar</button>
 		</div>
 	</form>

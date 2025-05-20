@@ -207,7 +207,7 @@
 	
 	<c:if test="${empty listaMedicamentos}">
 	    <div class="container mt-3 mb-5 p-3 bg-light">
-	        <p class="text-center text m-1">Nenhum medicamento encontrado :/</p>
+	        <p class="text-center text m-1">No momento estamos sem medicamentos cadastrados :/</p>
 	    </div>
 	</c:if>
 
@@ -236,7 +236,7 @@
 			</div>
 			<!-- Formulário de cadastro -->
 			<div class="col-md-5">
-				<h5 class="mb-3 text-center">Cadastre-se</h5>
+				<h5 class="mb-3 text-center txt-cyan">Cadastre-se</h5>
 				<form action="<%= contextPath %>/CreateAdminServlet" method="post">
 					<div class="form-row">
 						<div class="form-group col-6">

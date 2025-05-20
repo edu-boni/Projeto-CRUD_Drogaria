@@ -1,8 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<% String contextPath = request.getContextPath(); %>
 
+<footer class="container-fluid p-4 mt-5 bg-cyan w-100 text-center">
+	<img src="<%= contextPath %>/images/logo.png" alt="Logo" style="height: 50px;">
+	<p class="mt-3 mb-0">Farmácia Bem-Estar &copy; 2025 - Todos os direitos reservados - TSI IFSP Araraquara</p>
+</footer>
 
-<div class="container-fluid p-5 bg-cyan w-100 mt-5"></div>
 <script
 	src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
 	integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

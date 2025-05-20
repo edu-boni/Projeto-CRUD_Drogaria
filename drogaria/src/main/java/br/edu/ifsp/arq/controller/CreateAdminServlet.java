@@ -38,8 +38,13 @@ public class CreateAdminServlet extends HttpServlet {
 			msg = "Nome, email e senha obrigatórios" ;
 			request.setAttribute("mensagem", msg);
 			request.setAttribute("classAlert","p-0 alert alert-danger");
-			getServletContext().getRequestDispatcher("/cadastro.jsp").forward(request, response);
-		}else{
+			getServletContext().getRequestDispatcher("/cadastrar.jsp").forward(request, response);
+		}else if (dao.emailExiste(email)) {
+	        msg = "Já existe um cadastro com esse e-mail.";
+	        request.setAttribute("mensagem", msg);
+	        request.setAttribute("classAlert", "p-0 alert alert-warning");
+	        getServletContext().getRequestDispatcher("/cadastrar.jsp").forward(request, response);
+	    }else{
 			Administrador a = new Administrador(nome, email, cpf, senha);
 			if(dao.adicionarAdministrador(a)) {
 				msg = "Perfil criado com sucesso. Novo administrador: "+nome;

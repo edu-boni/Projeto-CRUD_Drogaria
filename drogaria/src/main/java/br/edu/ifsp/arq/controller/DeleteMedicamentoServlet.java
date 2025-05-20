@@ -15,6 +15,7 @@ public class DeleteMedicamentoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+    	String contextPath = request.getContextPath();
         String idStr = request.getParameter("id");
         String msg;
         int id;
@@ -36,6 +37,6 @@ public class DeleteMedicamentoServlet extends HttpServlet {
         }
 
         request.setAttribute("mensagem", msg);
-        request.getRequestDispatcher("/ReadMedicamentoServlet").forward(request, response);
+        request.getRequestDispatcher(contextPath+"/adm/logout.jsp").forward(request, response);
     }
 }

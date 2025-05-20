@@ -46,7 +46,20 @@ public class AdministradorDAO {
 		return this.listaDeAdministradores.add(a);
 	}
 	
+	public boolean removerAdministradorPorId(int id) {
+	    return this.listaDeAdministradores.removeIf(a -> a.getId() == id);
+	}
+	
 	public ArrayList<Administrador> getAdministradores(){
 		return this.listaDeAdministradores;
-	}	
+	}
+	
+	public boolean emailExiste(String email) {
+	    for (Administrador a : listaDeAdministradores) {
+	        if (a.getEmail().equalsIgnoreCase(email)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 }
