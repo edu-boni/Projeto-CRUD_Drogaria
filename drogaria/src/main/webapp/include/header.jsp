@@ -46,7 +46,7 @@
 	        <!-- BARRA DE BUSCA -->
 	        <%
 			  boolean usuarioLogado = session.getAttribute("usuarioLogado") != null;
-			  String larguraBusca = usuarioLogado ? "400px" : "600px";
+			  String larguraBusca = usuarioLogado ? "300px" : "600px";
 			%>
 	        <form action="<%= contextPath %>/buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0" style="max-width: <%= larguraBusca %>; width: 100%;">
 	          <div class="input-group w-100">
