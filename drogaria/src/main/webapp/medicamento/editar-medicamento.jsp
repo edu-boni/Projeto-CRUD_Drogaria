@@ -66,7 +66,7 @@
         </div>
 
         <div class="col-12 d-flex justify-content-between mt-3">
-          <a href="<%= contextPath %>/DeleteMedicamentoServlet?id=${param.id}" class="btn btn-danger">Excluir</a>
+          <a href="#" data-id="${param.id}" data-nome="${param.nome}" class="btnExcluirMedicamento btn btn-danger">Excluir</a>
           <button type="submit" class="btn bg-cyan">Salvar opções</button>
         </div>
       </form>

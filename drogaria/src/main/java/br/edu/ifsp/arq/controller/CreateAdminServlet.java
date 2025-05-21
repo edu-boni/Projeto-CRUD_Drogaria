@@ -55,5 +55,4 @@ public class CreateAdminServlet extends HttpServlet {
 			getServletContext().getRequestDispatcher("/login.jsp").forward(request, response);
 		}
 	}
-
 }

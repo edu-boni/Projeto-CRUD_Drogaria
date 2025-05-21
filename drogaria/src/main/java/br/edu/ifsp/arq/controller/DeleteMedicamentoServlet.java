@@ -37,6 +37,6 @@ public class DeleteMedicamentoServlet extends HttpServlet {
         }
 
         request.setAttribute("mensagem", msg);
-        request.getRequestDispatcher(contextPath+"/adm/logout.jsp").forward(request, response);
+        request.getRequestDispatcher("/ReadMedicamentoServlet").forward(request, response);
     }
 }
