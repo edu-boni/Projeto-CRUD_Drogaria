@@ -66,7 +66,7 @@
 	          </li>
 	
 	          <li class="nav-item mx-1">
-	            <a class="nav-link text-white font-weight-bold" href="#"><i class="fas fa-info-circle"></i> Sobre</a>
+	            <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/sobre.jsp"><i class="fas fa-info-circle"></i> Sobre</a>
 	          </li>
 	
 	          <% if (session.getAttribute("usuarioLogado") != null) {
