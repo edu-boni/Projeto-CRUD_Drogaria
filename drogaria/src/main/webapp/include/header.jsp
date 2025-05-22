@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="<%= contextPath %>/util/style.css">
 
 <title>Farmácia Bem-estar</title>
-<link rel="icon" type="image/x-icon" href="<%= contextPath %>/images/favicon.png">
+<link rel="icon" type="image/x-icon" href="<%= contextPath %>/images/favicon.ico">
 
 </head>
 <body>
@@ -116,7 +116,3 @@
 	    </div>
 	  </c:if>
 	</header>
-
-	
-	</div>
-
