@@ -17,7 +17,6 @@
     </div>
 	
 	<div class="w-100">
-	    <!-- Título da equipe -->
 	    <div class="text-center mb-2">
 	        <h4 class="txt-cyan">Conheça a equipe por trás do projeto</h4>
 	        <p class="text-secondary">Selecione as pílulas para conhecer um pouco de cada um através de bulas.</p>
@@ -29,7 +28,6 @@
 		    <div class="pill pill-red pill-fixed" onclick="showContent('content3')"></div>
 		</div>
 		
-		<!-- Conteúdos ocultos -->
 		<div id="content1" class="pill-content d-none mt-5 position-relative">
 		    <div class="card p-4 mb-3 position-relative">
 		        <p class="text-muted position-absolute m-0 d-flex align-items-center"
@@ -53,7 +51,6 @@
 		    </div>
 		</div>
 		
-		<!-- Conteúdo Gabriel -->
 		<div id="content2" class="pill-content d-none mt-5 position-relative">
 		    <div class="card p-4 mb-3 position-relative">
 		        <p class="text-muted position-absolute m-0 d-flex align-items-center"
@@ -77,7 +74,6 @@
 		    </div>
 		</div>
 		
-		<!-- Conteúdo Gabrielle -->
 		<div id="content3" class="pill-content d-none mt-5 position-relative">
 		    <div class="card p-4 mb-3 position-relative">
 		        <p class="text-muted position-absolute m-0 d-flex align-items-center"
