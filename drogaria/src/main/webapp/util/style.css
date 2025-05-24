@@ -35,3 +35,42 @@ body {
 .hover-card:hover{
 	cursor: pointer;
 }
+
+.pill-wrapper {
+	margin-left: -10px;
+	margin-right: -10px;
+}
+
+.pill {
+	--left-color: #d9d9d9;
+	--right-color: #6F92B2;
+	height: 90px;
+	border-radius: 50px;
+	background: linear-gradient(to right, var(--left-color) 50%, var(--right-color) 50%);
+	margin: 10px;
+	cursor: pointer;
+	opacity: 1;
+	transition: opacity 0.2s ease;
+}
+
+.pill:hover {
+	opacity: 0.7;
+}
+
+.pill-blue  { --right-color: #6F92B2; }
+.pill-cyan  { --right-color: #6FB2A4; }
+.pill-red   { --right-color: #B26F70; }
+
+.pill-fixed {
+	width: 250px;
+	min-width: 220px;
+	max-width: 100%;
+}
+
+.pill-content {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Times New Roman', sans-serif;
+}
