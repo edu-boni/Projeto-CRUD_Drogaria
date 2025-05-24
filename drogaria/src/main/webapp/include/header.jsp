@@ -66,7 +66,7 @@
 	          </li>
 	
 	          <li class="nav-item mx-1">
-	            <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/sobre.jsp"><i class="fas fa-info-circle"></i> Sobre</a>
+	            <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/public/sobre.jsp"><i class="fas fa-info-circle"></i> Sobre</a>
 	          </li>
 	
 	          <% if (session.getAttribute("usuarioLogado") != null) {
@@ -99,7 +99,7 @@
 	            </li>
 	          <% } else { %>
 	            <li class="nav-item mx-1">
-	              <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/login.jsp">
+	              <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/public/login.jsp">
 	                <i class="fas fa-user"></i> Login
 	              </a>
 	            </li>

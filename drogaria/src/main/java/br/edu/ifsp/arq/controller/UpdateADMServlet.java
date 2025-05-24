@@ -87,12 +87,19 @@ public class UpdateADMServlet extends HttpServlet {
         String nome = request.getParameter("nome");
         String email = request.getParameter("email");
         String cpf = request.getParameter("cpf");
-        String senha = request.getParameter("senha"); // este campo vem desabilitado
-
+        
+        if(!usuario.getEmail().equalsIgnoreCase(email) && dao.emailExiste(email)) {
+            msg = "Já existe outro administrador cadastrado com esse e-mail.";
+            request.setAttribute("mensagem", msg);
+            request.setAttribute("classAlert", "alert alert-warning");
+            request.setAttribute("administrador", usuario);
+            request.getRequestDispatcher("adm/editar-adm.jsp").forward(request, response);
+            return;
+        }
+        
         usuario.setNome(nome);
         usuario.setEmail(email);
         usuario.setCpf(cpf);
-        // senha continua a mesma, pois não é alterada nesse fluxo
 
         boolean atualizado = dao.atualizarAdministrador(id, usuario);
 

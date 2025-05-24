@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<% String contextPath = request.getContextPath(); %>
 
 <c:import url="/include/header.jsp"></c:import>
 
@@ -27,11 +28,11 @@
         <!-- Card 1 -->
         <div class="col-md-4 mb-4">
             <div class="card shadow text-center h-100">
-                <img src="images/eduardo.png" class="card-img-top" alt="Foto Eduardo" style="object-fit: cover; height: 300px;">
+                <img src="<%= contextPath %>/images/eduardo.png" class="card-img-top" alt="Foto Eduardo" style="object-fit: cover; height: 300px;">
                 <div class="card-body">
                     <h5 class="card-title txt-cyan">Eduardo Ferreira Bonifacio</h5>
                     <p class="text-secondary">Idade: 20 anos</p>
-                    <p><strong>Remédio favorito:</strong> <img src="images/dorflex.png" alt="Dorflex" style="height: 20px; vertical-align: middle;"></p>
+                    <p><strong>Remédio favorito:</strong> <img src="<%= contextPath %>/images/dorflex.png" alt="Dorflex" style="height: 20px; vertical-align: middle;"></p>
                 </div>
             </div>
         </div>
@@ -39,11 +40,11 @@
         <!-- Card 2 -->
         <div class="col-md-4 mb-4">
             <div class="card shadow text-center h-100">
-                <img src="images/gabriel.png" class="card-img-top" alt="Foto Gabriel" style="object-fit: cover; height: 300px;">
+                <img src="<%= contextPath %>/images/gabriel.png" class="card-img-top" alt="Foto Gabriel" style="object-fit: cover; height: 300px;">
                 <div class="card-body">
                     <h5 class="card-title txt-cyan">Gabriel Albino</h5>
                     <p class="text-secondary">Idade: 20 anos</p>
-                    <p><strong>Remédio favorito:</strong> <img src="images/dorflex.png" alt="Dorflex" style="height: 20px; vertical-align: middle;"></p>
+                    <p><strong>Remédio favorito:</strong> <img src="<%= contextPath %>/images/dorflex.png" alt="Dorflex" style="height: 20px; vertical-align: middle;"></p>
                 </div>
             </div>
         </div>
@@ -51,11 +52,11 @@
         <!-- Card 3 -->
         <div class="col-md-4 mb-4">
             <div class="card shadow text-center h-100">
-                <img src="images/gabrielle.png" class="card-img-top" alt="Foto Gabrielle" style="object-fit: cover; height: 300px;">
+                <img src="<%= contextPath %>/images/gabrielle.png" class="card-img-top" alt="Foto Gabrielle" style="object-fit: cover; height: 300px;">
                 <div class="card-body">
                     <h5 class="card-title txt-cyan">Gabrielle Ulisses</h5>
                     <p class="text-secondary">Idade: 20 anos</p>
-                    <p><strong>Remédio favorito:</strong> <img src="images/dorflex.png" alt="Dorflex" style="height: 20px; vertical-align: middle;"></p>
+                    <p><strong>Remédio favorito:</strong> <img src="<%= contextPath %>/images/dorflex.png" alt="Dorflex" style="height: 20px; vertical-align: middle;"></p>
                 </div>
             </div>
         </div>

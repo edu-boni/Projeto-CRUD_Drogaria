@@ -105,9 +105,9 @@ boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 			<div class="modal-body">
 				<p>Para acessar este conteúdo, você precisa estar logado.</p>
 				<div class="d-flex justify-content-between">
-					<a href="<%= contextPath %>/cadastrar.jsp"
+					<a href="<%= contextPath %>/include/cadastrar.jsp"
 					class="btn btn-secondary w-100 m-1">Criar uma conta</a>
-					<a href="<%= contextPath %>/login.jsp"
+					<a href="<%= contextPath %>/include/login.jsp"
 					class="btn bg-cyan w-100 m-1">Fazer login</a> 
 				</div>
 			</div>

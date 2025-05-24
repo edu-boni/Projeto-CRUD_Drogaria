@@ -29,7 +29,7 @@
 			</div>
 
 			<div class="mt-4 d-flex justify-content-between align-items-center">
-				<a href="login.jsp"
+				<a href="<%= request.getContextPath() %>/public/login.jsp"
 					class="btn btn-outline-secondary">Voltar ao Login</a>
 				<button type="submit" class="btn bg-cyan">Cadastrar</button>
 			</div>

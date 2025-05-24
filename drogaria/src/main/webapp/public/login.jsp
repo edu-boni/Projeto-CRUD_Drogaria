@@ -19,7 +19,7 @@
 			</div>
 
 			<div class="mt-4 d-flex justify-content-between align-items-center">
-				<a href="<%= request.getContextPath() %>/cadastrar.jsp"
+				<a href="<%= request.getContextPath() %>/public/cadastrar.jsp"
 					class="btn btn-outline-secondary">Cadastre-se</a>
 				<button type="submit" class="btn bg-cyan">Entrar</button>
 			</div>

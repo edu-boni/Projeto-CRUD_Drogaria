@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
             msg = "E-mail não cadastrado.";
             request.setAttribute("mensagem", msg);
             request.setAttribute("classAlert", "p-0 alert alert-danger");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/public/login.jsp").forward(request, response);
             return;
         }
 
@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
             msg = "Senha incorreta.";
             request.setAttribute("mensagem", msg);
             request.setAttribute("classAlert", "p-0 alert alert-danger");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/public/login.jsp").forward(request, response);
         }
     }
 }
