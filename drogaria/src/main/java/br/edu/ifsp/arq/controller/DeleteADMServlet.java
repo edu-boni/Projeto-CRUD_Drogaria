@@ -43,6 +43,6 @@ public class DeleteADMServlet extends HttpServlet {
         }
 
         request.setAttribute("mensagem", msg);
-        request.getRequestDispatcher("editar-perfil.jsp").forward(request, response);
+        request.getRequestDispatcher("/adm/editar-adm.jsp").forward(request, response);
     }
 }
