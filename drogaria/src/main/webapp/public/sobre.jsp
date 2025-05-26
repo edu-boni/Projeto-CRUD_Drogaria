@@ -44,9 +44,9 @@
 		            <p>"Medicamente genérico Lei n° 9.787, de 1999"</p>
 		            <h5>VIA ORAL<br>USO ADULTO</h5>
 		            <h4>APRESENTAÇÕES</h4>
-		            <p>[Texto descritivo de Eduardo aqui]</p>
+		            <p>Tenho 20 anos, atuo na área administrativa e estudo programação e tecnologia. Minhas paixões envolvem literatura, jogos, música e estudar sobre a sociedade e a psique humana.</p>
 		            <h4>MEDICAMENTO FAVORITO</h4>
-		            <p>[Nome do medicamento favorito]</p>
+		            <p>Dipirona ................................................ 500mg</p>
 		        </div>
 		    </div>
 		</div>
@@ -67,7 +67,7 @@
 		            <p>"Medicamente genérico Lei n° 9.787, de 1999"</p>
 		            <h5>VIA ORAL<br>USO ADULTO</h5>
 		            <h4>APRESENTAÇÕES</h4>
-		            <p>Tenho 20 anos e atuo na área de informática como suporte, em contato frequente com SQL. Amo desenhar, cozinhar e fazer coisas bonitas e diferentes através do design.</p>
+		            <p>Tenho 20 anos e atuo na área de informática como suporte, em contato frequente com SQL. Amo desenhar, pintar, cozinhar e explorar a criatividade através do design.</p>
 		            <h4>MEDICAMENTO FAVORITO</h4>
 		            <p>Adenosina ................................................. 6mg</p>
 		        </div>
@@ -90,9 +90,9 @@
 		            <p>"Medicamente genérico Lei n° 9.787, de 1999"</p>
 		            <h5>VIA ORAL<br>USO ADULTO</h5>
 		            <h4>APRESENTAÇÕES</h4>
-		            <p>[Texto descritivo de Gabrielle aqui]</p>
+		            <p>Tenho 20 anos, estudo Sistemas para Internet e trabalho como Analista de Sistemas. Sou curiosa e encontro na arte meu respiro. Gosto de aprender e de criar com sensibilidade.</p>
 		            <h4>MEDICAMENTO FAVORITO</h4>
-		            <p>[Nome do medicamento favorito]</p>
+		            <p>Ciclobenzaprina ...................................... 10mg</p>
 		        </div>
 		    </div>
 		</div>
