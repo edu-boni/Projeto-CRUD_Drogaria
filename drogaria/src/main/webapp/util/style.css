@@ -4,26 +4,20 @@
 body {
   font-family: 'Inter', sans-serif;
 }
-
-
 .vantagem {
 	min-height: 130px;
 	max-width: 130px;
 }
-
 .bg-cyan {
 	background-color: #6FB2A4;
 	color: white;
 }
-
 .bg-cyan-light{
 	background-color: #E8F5F2;
 }
-
 .txt-cyan {
 	color: #6FB2A4;
 }
-
 .custom-gradient {
 	background: linear-gradient(to right,
 		rgba(255, 255, 255, 0.4) 0%,
@@ -31,16 +25,13 @@ body {
 		rgba(111, 178, 164, 1) 100%);
 	border: none;
 }
-
 .hover-card:hover{
 	cursor: pointer;
 }
-
 .pill-wrapper {
 	margin-left: -10px;
 	margin-right: -10px;
 }
-
 .pill {
 	--left-color: #d9d9d9;
 	--right-color: #6F92B2;
@@ -52,11 +43,9 @@ body {
 	opacity: 1;
 	transition: opacity 0.2s ease;
 }
-
 .pill:hover {
 	opacity: 0.7;
 }
-
 .pill-blue  { --right-color: #6F92B2; }
 .pill-cyan  { --right-color: #6FB2A4; }
 .pill-red   { --right-color: #B26F70; }
