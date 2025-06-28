@@ -2,14 +2,14 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="br.edu.ifsp.arq.model.Administrador"%>
-<c:import url="../include/header.jsp"></c:import>
+
+<div id="header-placeholder"></div>
 
 <main class="container justify-content-center d-flex align-items-center" style="min-height: 80vh">
 <div>
 	<h3 class="mb-2 txt-cyan">Meus dados</h3>
 	<p class="text-secondary">Altere suas informações</p>
-	<% String contextPath = request.getContextPath(); %>
-	<form action="<%= contextPath %>/UpdateADMServlet" method="post"
+	<form action="/drogaria/UpdateADMServlet" method="post"
 		class="row">
 		<%
 		    Administrador a = (Administrador) request.getAttribute("administrador");
@@ -63,7 +63,7 @@
 	<div class="modal fade" id="alterarSenhaModal" tabindex="-1"
 		role="dialog" aria-labelledby="modalLabelSenha" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form action="<%= contextPath %>/UpdateADMServlet" method="post"
+			<form action="/drogaria/UpdateADMServlet" method="post"
 				class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="modalLabelSenha">Alterar Senha</h5>
@@ -96,4 +96,5 @@
 </div>
 </main>
 
-<c:import url="../include/footer.jsp"></c:import>
+<div id="footer-placeholder"></div>
+<script src="/drogaria/assets/js/header_footer_include.js"></script>

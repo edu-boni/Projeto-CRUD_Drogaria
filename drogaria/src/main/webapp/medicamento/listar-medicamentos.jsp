@@ -2,11 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<% boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 
-<c:import url="../include/header.jsp"></c:import>
-
-<%	String contextPath = request.getContextPath();
-	boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
+<div id="header-placeholder"></div>
 
 <div class="container mt-5 justify-content-center d-flex flex-column align-items-center" style="min-height: 80vh">
 <% if (usuarioLogado) { %>
@@ -15,13 +13,13 @@
 		<c:when test="${empty listaMedicamentos}">
 		<div class="col-md-12 row d-flex">
 			<h2 class="txt-cyan col-md-6 col-sm-12">Nenhum medicamento encontrado</h2>
-			 <a href="<%= contextPath %>/medicamento/form-medicamento.jsp" class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0"> <i class="fas fa-plus-circle"></i> Cadastrar medicamento</a>
+			 <a href="/drogaria/medicamento/form-medicamento.jsp" class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0"> <i class="fas fa-plus-circle"></i> Cadastrar medicamento</a>
 		</div>
 		</c:when>
 		<c:otherwise>
 			<div class="col-md-12 row d-flex">
 				<h2 class="txt-cyan col-md-6 col-sm-12">Todos os medicamentos</h2>
-			 	<a href="<%= contextPath %>/medicamento/form-medicamento.jsp" class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0"> <i class="fas fa-plus-circle"></i> Cadastrar medicamento</a>
+			 	<a href="/drogaria/medicamento/form-medicamento.jsp" class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0"> <i class="fas fa-plus-circle"></i> Cadastrar medicamento</a>
 			</div>
 			<div class="container mb-5">
 			<div class="row">
@@ -79,4 +77,5 @@
 	
 <% } %>
 </div>
-<c:import url="../include/footer.jsp"></c:import>
+<div id="footer-placeholder"></div>
+<script src="/drogaria/assets/js/header_footer_include.js"></script>

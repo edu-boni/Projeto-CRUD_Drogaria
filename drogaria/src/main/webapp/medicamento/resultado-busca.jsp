@@ -2,10 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:import url="../include/header.jsp"></c:import>
+<div id="header-placeholder"></div>
 
-<% String contextPath = request.getContextPath();
-boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
+<% boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 
 <div class="container mt-5" style="min-height: 80vh">
 	<h2 class="mb-4 text-center">
@@ -105,9 +104,9 @@ boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 			<div class="modal-body">
 				<p>Para acessar este conteúdo, você precisa estar logado.</p>
 				<div class="d-flex justify-content-between">
-					<a href="<%= contextPath %>/include/cadastrar.jsp"
+					<a href="/drogaria/include/cadastrar.html"
 					class="btn btn-secondary w-100 m-1">Criar uma conta</a>
-					<a href="<%= contextPath %>/include/login.jsp"
+					<a href="/drogaria/include/login.html"
 					class="btn bg-cyan w-100 m-1">Fazer login</a> 
 				</div>
 			</div>
@@ -116,4 +115,5 @@ boolean usuarioLogado = session.getAttribute("usuarioLogado") != null; %>
 </div>
 <% } %>
 
-<c:import url="../include/footer.jsp"></c:import>
+<div id="footer-placeholder"></div>
+<script src="/drogaria/assets/js/header_footer_include.js"></script>

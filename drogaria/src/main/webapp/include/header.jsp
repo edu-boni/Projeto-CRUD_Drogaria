@@ -3,8 +3,6 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<% String contextPath = request.getContextPath(); %>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -16,10 +14,10 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link rel="stylesheet" href="<%= contextPath %>/util/style.css">
+<link rel="stylesheet" href="/drogaria/assets/css/style.css">
 
 <title>Farmácia Bem-estar</title>
-<link rel="icon" type="image/x-icon" href="<%= contextPath %>/images/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/drogaria/assets/images/favicon.ico">
 
 </head>
 <body>
@@ -30,8 +28,8 @@
 	    <div class="container">
 	
 	      <!-- LOGO -->
-	      <a class="navbar-brand d-flex align-items-center" href="<%= contextPath %>/index.jsp">
-	        <img src="<%= contextPath %>/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;">
+	      <a class="navbar-brand d-flex align-items-center" href="/drogaria/index.jsp">
+	        <img src="/drogaria/assets/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;">
 	      </a>
 	
 	      <!-- BOTÃO COLAPSÁVEL (MOBILE) -->
@@ -48,7 +46,7 @@
 			  boolean usuarioLogado = session.getAttribute("usuarioLogado") != null;
 			  String larguraBusca = usuarioLogado ? "300px" : "600px";
 			%>
-	        <form action="<%= contextPath %>/buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0" style="max-width: <%= larguraBusca %>; width: 100%;">
+	        <form action="/drogaria/buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0" style="max-width: <%= larguraBusca %>; width: 100%;">
 	          <div class="input-group w-100">
 	            <input name="search" class="form-control rounded-left" type="search" placeholder="Buscar" aria-label="Buscar" minlength="3" required>
 	            <div class="input-group-append">
@@ -62,11 +60,11 @@
 	        <!-- MENU -->
 	        <ul class="navbar-nav ml-auto">
 	          <li class="nav-item mx-1">
-	            <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/index.jsp"><i class="fas fa-home"></i> Início</a>
+	            <a class="nav-link text-white font-weight-bold" href="/drogaria/index.jsp"><i class="fas fa-home"></i> Início</a>
 	          </li>
 	
 	          <li class="nav-item mx-1">
-	            <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/public/sobre.jsp"><i class="fas fa-info-circle"></i> Sobre</a>
+	            <a class="nav-link text-white font-weight-bold" href="/drogaria/public/sobre.html"><i class="fas fa-info-circle"></i> Sobre</a>
 	          </li>
 	
 	          <% if (session.getAttribute("usuarioLogado") != null) {
@@ -78,9 +76,9 @@
 	                <i class="fas fa-pills mr-1"></i> Medicamentos
 	              </a>
 	              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-		              <a class="dropdown-item" href="<%= contextPath %>/medicamento/form-medicamento.jsp">Adicionar novo remédio</a>	           
+		              <a class="dropdown-item" href="/drogaria/medicamento/form-medicamento.jsp">Adicionar novo remédio</a>	           
 		              <div class="dropdown-divider"></div>
-		              <a class="dropdown-item" href="<%= contextPath %>/medicamento/listar-medicamentos.jsp">Ver todos</a>
+		              <a class="dropdown-item" href="/drogaria/medicamento/listar-medicamentos.jsp">Ver todos</a>
 	              </div>
 	            </li>
 	
@@ -90,7 +88,7 @@
 	                <i class="fas fa-user mr-1"></i> <%= usuario.getNome() %>
 	              </a>
 	              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-	                <a class="dropdown-item" href="<%= contextPath %>/adm/editar-adm.jsp">Meus dados</a>
+	                <a class="dropdown-item" href="/drogaria/adm/editar-adm.jsp">Meus dados</a>
 	                <div class="dropdown-divider"></div>
 	                <a class="dropdown-item text-danger" href="#" id="btnLogout">Sair</a>
 
@@ -99,7 +97,7 @@
 	            </li>
 	          <% } else { %>
 	            <li class="nav-item mx-1">
-	              <a class="nav-link text-white font-weight-bold" href="<%= contextPath %>/public/login.jsp">
+	              <a class="nav-link text-white font-weight-bold" href="/drogaria/public/login.html">
 	                <i class="fas fa-user"></i> Login
 	              </a>
 	            </li>

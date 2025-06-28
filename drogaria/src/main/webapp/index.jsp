@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:import url="/include/header.jsp"></c:import>
+<div id="header-placeholder"></div>
 
 <main class="container mt-5" style="min-height: 80vh">
 	<% 
@@ -31,7 +31,7 @@
 	
 	<% if (usuarioLogado) { %>
 	    <h2><%= saudacao %>, <span class="txt-cyan"><%= a.getNome() %></span>!</h2>
-	    <a href="<%= contextPath %>/medicamento/form-medicamento.jsp"
+	    <a href="/drogaria/medicamento/form-medicamento.html"
 	       class="btn w-100 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-4 mt-1">
 	        <i class="fas fa-plus-circle"></i> Cadastrar medicamento
 	    </a>
@@ -46,15 +46,15 @@
 		</ol>
 		<div class="carousel-inner">
 			<div class="carousel-item active">
-				<img src="<%= contextPath %>/images/1.png"
+				<img src="/drogaria/assets/images/1.png"
 					class="d-block w-100 rounded" alt="...">
 			</div>
 			<div class="carousel-item">
-				<img src="<%= contextPath %>/images/2.png"
+				<img src="/drogaria/assets/images/2.png"
 					class="d-block w-100 rounded" alt="...">
 			</div>
 			<div class="carousel-item">
-				<img src="<%= contextPath %>/images/3.png"
+				<img src="/drogaria/assets/images/3.png"
 					class="d-block w-100 rounded" alt="...">
 			</div>
 		</div>
@@ -94,10 +94,10 @@
 	            <% } %>
 					<c:choose>
 					  <c:when test="${empty med.imagem_url}">
-					    <img src="/drogaria/images/semimagem.png" alt="Imagem padrão" class="img-fluid mb-4" style="max-height:120px;" />
+					    <img src="/drogaria/assets/images/semimagem.png" alt="Imagem padrão" class="img-fluid mb-4" style="max-height:120px;" />
 					  </c:when>
 					  <c:otherwise>
-					    <img src="${med.imagem_url}" alt="${med.nome}" class="img-fluid mb-4" style="max-height:120px;" onerror="this.onerror=null;this.src='/drogaria/images/semimagem.png';" />
+					    <img src="${med.imagem_url}" alt="${med.nome}" class="img-fluid mb-4" style="max-height:120px;" onerror="this.onerror=null;this.src='/drogaria/assets/images/semimagem.png';" />
 					  </c:otherwise>
 					</c:choose>
 	                <div class="p-3 w-100 bg-cyan-light" style="border-radius: 6px;">
@@ -143,7 +143,7 @@
 	    <div class="container mb-5">
 	    <div class="mb-5 d-flex justify-content-between align-bottom">
     		<h3>Todos os medicamentos</h3>
-		    <a href="<%= contextPath %>/medicamento/listar-medicamentos.jsp" class="text-secondary">Ver mais</a>
+		    <a href="/drogaria/medicamento/listar-medicamentos.jsp" class="text-secondary">Ver mais</a>
 		</div>
 		<div class="row">
 		    <c:set var="size" value="${fn:length(listaMedicamentos)}"/>
@@ -159,10 +159,10 @@
 		            <% } %>
 		            <c:choose>
 					  <c:when test="${empty med.imagem_url}">
-					    <img src="/drogaria/images/semimagem.png" alt="Imagem padrão" class="img-fluid mb-4" style="max-height:120px;" />
+					    <img src="/drogaria/assets/images/semimagem.png" alt="Imagem padrão" class="img-fluid mb-4" style="max-height:120px;" />
 					  </c:when>
 					  <c:otherwise>
-					    <img src="${med.imagem_url}" alt="${med.nome}" class="img-fluid mb-4" style="max-height:120px;" onerror="this.onerror=null;this.src='/drogaria/images/semimagem.png';" />
+					    <img src="${med.imagem_url}" alt="${med.nome}" class="img-fluid mb-4" style="max-height:120px;" onerror="this.onerror=null;this.src='/drogaria/assets/images/semimagem.png';" />
 					  </c:otherwise>
 					</c:choose>
 		            <div class="p-3 w-100 bg-cyan-light" style="border-radius: 6px;">
@@ -217,7 +217,7 @@
 		<div class="row align-items-center">
 			<!-- Ilustração do médico -->
 			<div class="col-md-4 text-center d-none d-md-block">
-				<img src="<%= contextPath %>/images/medico.png" alt="Médico"
+				<img src="/drogaria/assets/images/medico.png" alt="Médico"
 					class="img-fluid" style="max-height: 300px;">
 			</div>
 			<!-- Vantagens -->
@@ -279,9 +279,9 @@
 				<div class="modal-body">
 					<p>Para acessar este conteúdo, você precisa estar logado.</p>
 					<div class="d-flex justify-content-between">
-						<a href="<%= contextPath %>/public/cadastrar.jsp"
+						<a href="/drogaria/public/cadastrar.html"
 						class="btn btn-secondary w-100 m-1">Criar uma conta</a>
-						<a href="<%= contextPath %>/public/login.jsp"
+						<a href="/drogaria/public/login.html"
 						class="btn bg-cyan w-100 m-1">Fazer login</a> 
 					</div>
 				</div>
@@ -290,5 +290,5 @@
 	</div>
 	<% } %>
 </main>
-
-<c:import url="/include/footer.jsp"></c:import>
+<div id="footer-placeholder"></div>
+<script src="/drogaria/assets/js/header_footer_include.js"></script>
