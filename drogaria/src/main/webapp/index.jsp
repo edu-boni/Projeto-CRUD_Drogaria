@@ -9,7 +9,6 @@
 
 <main class="container mt-5" style="min-height: 80vh">
 	<% 
-	  	String contextPath = request.getContextPath();
 	    boolean usuarioLogado = session.getAttribute("usuarioLogado") != null;
 	    
 	    Administrador a = (Administrador) request.getAttribute("administrador");
@@ -237,7 +236,7 @@
 			<!-- Formulário de cadastro -->
 			<div class="col-md-5">
 				<h5 class="mb-3 text-center txt-cyan">Cadastre-se</h5>
-				<form method="post" id="form-cadastro">
+				<form id="form-cadastro-adm">
 					<div class="form-row">
 						<div class="form-group col-6">
 							<input type="text" name="nome" class="form-control"
@@ -256,7 +255,7 @@
 						<input type="password" name="senha" class="form-control"
 							placeholder="Senha" required>
 					</div>
-					<button type="submit" class="btn bg-cyan btn-block mt-2" onclick="">Cadastrar</button>
+					<button type="submit" class="btn bg-cyan btn-block mt-2">Cadastrar</button>
 				</form>
 			</div>
 		</div>
@@ -290,47 +289,16 @@
 	</div>
 	<% } %>
 </main>
-<script
-	src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-	integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-	crossorigin="anonymous"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-	crossorigin="anonymous"></script>
 <div id="footer-placeholder"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="/drogaria/assets/js/header_footer_include.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/drogaria/assets/js/sweet_alerts.js"></script>
 <script src="/drogaria/assets/js/exibe_mensagem.js"></script>
-<script>
-document.getElementById('form-cadastro').addEventListener('submit', async function (e){
-  e.preventDefault();
+<script src="/drogaria/assets/js/cadastro_adm.js"></script>
 
-  const form = e.target;
-  const formData = new URLSearchParams();
-  formData.append('nome', form.nome.value);
-  formData.append('cpf', form.cpf.value);
-  formData.append('email', form.email.value);
-  formData.append('senha', form.senha.value);
-
-  try {
-    const response = await fetch('/drogaria/CreateAdminServlet', {
-      method: 'POST',
-      body: formData
-    });
-
-    const { message } = await response.json();
-
-    if (response.ok) {
-      sessionStorage.setItem("mensagem", message);
-      sessionStorage.setItem("mensagem-cor", "alert-success");
-      window.location.href = '/drogaria/public/login.html';
-    } else {
-      // ❌ Se der erro, exibe mensagem direto no index
-      exibe_mensagem(message, "alert-danger");
-    }
-  } catch (error) {
-    console.error("Erro inesperado:", error);
-    exibe_mensagem("Erro ao cadastrar. Tente novamente mais tarde.", "alert-danger");
-  }
-});
-</script>
+</body>
+</html>
