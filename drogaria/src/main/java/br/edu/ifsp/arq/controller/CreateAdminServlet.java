@@ -3,9 +3,7 @@ package br.edu.ifsp.arq.controller;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import br.edu.ifsp.arq.dao.AdministradorDAO;
 import br.edu.ifsp.arq.model.Administrador;
@@ -14,45 +12,39 @@ import br.edu.ifsp.arq.model.Administrador;
 public class CreateAdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private AdministradorDAO dao;
-       
-   
+
     public CreateAdminServlet() {
         super();
         dao = AdministradorDAO.getInstance();
     }
 
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String nome = request.getParameter("nome");
-		String cpf = request.getParameter("cpf");
-		String email = request.getParameter("email");
-		String senha = request.getParameter("senha");
-		
-		String msg = "";
-		if(nome.isEmpty() || email.isEmpty() || senha.isEmpty()){
-			msg = "Nome, email e senha obrigatórios" ;
-			request.setAttribute("mensagem", msg);
-			request.setAttribute("classAlert","p-0 alert alert-danger");
-			getServletContext().getRequestDispatcher("/public/cadastrar.jsp").forward(request, response);
-		}else if (dao.emailExiste(email)) {
-	        msg = "Já existe um cadastro com esse e-mail.";
-	        request.setAttribute("mensagem", msg);
-	        request.setAttribute("classAlert", "p-0 alert alert-warning");
-	        getServletContext().getRequestDispatcher("/public/cadastrar.jsp").forward(request, response);
-	    }else{
-			Administrador a = new Administrador(nome, email, cpf, senha);
-			if(dao.adicionarAdministrador(a)) {
-				msg = "Perfil criado com sucesso. Novo administrador: "+nome;
-				request.setAttribute("mensagem", msg);
-				request.setAttribute("classAlert","p-0 alert alert-success");
-			};
-			
-			getServletContext().getRequestDispatcher("/public/login.jsp").forward(request, response);
-		}
-	}
+        String nome = request.getParameter("nome");
+        String cpf = request.getParameter("cpf");
+        String email = request.getParameter("email");
+        String senha = request.getParameter("senha");
+
+        String jsonResponse;
+
+        if (nome == null || email == null || senha == null || nome.trim().isEmpty() || email.trim().isEmpty() || senha.trim().isEmpty()) {
+            jsonResponse = "{\"message\": \"Nome, email e senha são obrigatórios.\"}";
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else if (dao.emailExiste(email)) {
+            jsonResponse = "{\"message\": \"Já existe um cadastro com esse e-mail.\"}";
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+        } else {
+            Administrador a = new Administrador(nome, email, cpf, senha);
+            if (dao.adicionarAdministrador(a)) {
+                jsonResponse = String.format("{\"message\": \"Administrador %s cadastrado com sucesso.\"}", nome);
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                jsonResponse = "{\"message\": \"Erro ao salvar administrador no banco de dados.\"}";
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        }
+        response.getWriter().write(jsonResponse);
+    }
 }

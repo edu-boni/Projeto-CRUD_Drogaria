@@ -108,9 +108,5 @@
 	  </nav>
 	
 	  <!-- MENSAGEM ALERTA -->
-	  <c:if test="${not empty mensagem}">
-	    <div class="${classAlert} text-center pt-3" role="alert">
-	      <p>${mensagem}</p>
-	    </div>
-	  </c:if>
+	    <div class="text-center pt-3" role="alert" id="alerta-mensagem"></div>
 	</header>
