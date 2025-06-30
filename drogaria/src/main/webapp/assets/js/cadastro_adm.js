@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("footer-carregado", function () {
   const form = document.getElementById('form-cadastro-adm');
   if (!form) {
     return;

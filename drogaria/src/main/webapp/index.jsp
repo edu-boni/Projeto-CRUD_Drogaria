@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="/drogaria/assets/css/style.css">
+	<title>Farmácia Bem-estar</title>
+	<link rel="icon" type="image/x-icon" href="/drogaria/assets/images/favicon.ico">
+</head>
+<body>
 <%@page import="br.edu.ifsp.arq.model.Administrador"%>
 <%@ page import="java.util.*, br.edu.ifsp.arq.model.Medicamento"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -8,34 +20,16 @@
 <div id="header-placeholder"></div>
 
 <main class="container mt-5" style="min-height: 80vh">
-	<% 
-	    boolean usuarioLogado = session.getAttribute("usuarioLogado") != null;
+	<%  boolean usuarioLogado = session.getAttribute("usuarioLogado") != null;
 	    
 	    Administrador a = (Administrador) request.getAttribute("administrador");
 	    if (a == null) {
 	        a = (Administrador) session.getAttribute("usuarioLogado");
 	    }
-	    
-	    String saudacao;
-	    java.util.Calendar agora = java.util.Calendar.getInstance();
-	    int hora = agora.get(java.util.Calendar.HOUR_OF_DAY);
-	    if (hora >= 5 && hora < 12) {
-	        saudacao = "Bom dia";
-	    } else if (hora >= 12 && hora < 18) {
-	        saudacao = "Boa tarde";
-	    } else {
-	        saudacao = "Boa noite";
-	    }
 	%>
 	
-	<% if (usuarioLogado) { %>
-	    <h2><%= saudacao %>, <span class="txt-cyan"><%= a.getNome() %></span>!</h2>
-	    <a href="/drogaria/medicamento/form-medicamento.html"
-	       class="btn w-100 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-4 mt-1">
-	        <i class="fas fa-plus-circle"></i> Cadastrar medicamento
-	    </a>
-	<% } %>
-
+	<div id="saudacao"></div>
+	
 	<!-- Carrossel -->
 	<div id="carousel" class="carousel slide mb-5" data-ride="carousel">
 		<ol class="carousel-indicators">
@@ -211,59 +205,9 @@
 	</c:if>
 
 	<!-- Sessão vantagens e cadastro -->
-	<% if (!usuarioLogado) { %>
-	<section>
-		<div class="row align-items-center">
-			<!-- Ilustração do médico -->
-			<div class="col-md-4 text-center d-none d-md-block">
-				<img src="/drogaria/assets/images/medico.png" alt="Médico"
-					class="img-fluid" style="max-height: 300px;">
-			</div>
-			<!-- Vantagens -->
-			<div class="col-md-3 text-center">
-				<h5 class="mb-3 txt-cyan">Vantagens do cadastro</h5>
-				<button
-					class="btn btn-light rounded-circle w-100 h-100 vantagem mb-3 text-white bg-cyan"
-					data-toggle="modal" data-target="#loginModal">
-					<b><i class="fas fa-solid fa-tag"></i><br>Ofertas exclusivas</b>
-				</button>
-				<button
-					class="btn btn-light rounded-circle w-100 h-100 vantagem mb-3 text-white bg-cyan"
-					data-toggle="modal" data-target="#loginModal">
-					<b><i class="fas fa-solid fa-plus"></i><br>Cadastrar remédios</b>
-				</button>
-			</div>
-			<!-- Formulário de cadastro -->
-			<div class="col-md-5">
-				<h5 class="mb-3 text-center txt-cyan">Cadastre-se</h5>
-				<form id="form-cadastro-adm">
-					<div class="form-row">
-						<div class="form-group col-6">
-							<input type="text" name="nome" class="form-control"
-								placeholder="Nome completo" required>
-						</div>
-						<div class="form-group col-6">
-							<input type="text" name="cpf" class="form-control"
-								placeholder="CPF">
-						</div>
-					</div>
-					<div class="form-group">
-						<input type="email" name="email" class="form-control"
-							placeholder="e-mail" required>
-					</div>
-					<div class="form-group">
-						<input type="password" name="senha" class="form-control"
-							placeholder="Senha" required>
-					</div>
-					<button type="submit" class="btn bg-cyan btn-block mt-2">Cadastrar</button>
-				</form>
-			</div>
-		</div>
-	</section>
-	<% } %>
+	<section id="vantagens"></section>
 
 	<!-- Modal de login -->
-	<% if (!usuarioLogado) { %>
 	<div class="modal fade" id="loginModal" tabindex="-1"
 		aria-labelledby="loginModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
@@ -287,17 +231,18 @@
 			</div>
 		</div>
 	</div>
-	<% } %>
 </main>
 <div id="footer-placeholder"></div>
 
+<script src="/drogaria/assets/js/index.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <script src="/drogaria/assets/js/header_footer_include.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/drogaria/assets/js/sweet_alerts.js"></script>
 <script src="/drogaria/assets/js/exibe_mensagem.js"></script>
+
 <script src="/drogaria/assets/js/cadastro_adm.js"></script>
 
 </body>
