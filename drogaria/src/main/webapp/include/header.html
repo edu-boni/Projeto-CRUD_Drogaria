@@ -29,7 +29,7 @@
       <div class="collapse navbar-collapse" id="navbarContent">
 
         <!-- BARRA DE BUSCA -->
-        <form action="/drogaria/buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0" id="form-busca">
+        <form action="/drogaria/buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0 w-100" id="form-busca">
           <div class="input-group w-100">
             <input name="search" class="form-control rounded-left" type="search" placeholder="Buscar" aria-label="Buscar" minlength="3" required>
             <div class="input-group-append">
@@ -42,47 +42,6 @@
 
         <!-- MENU -->
         <ul class="navbar-nav ml-auto">
-
-          <li class="nav-item mx-1">
-            <a class="nav-link text-white font-weight-bold" href="/drogaria/index.html"><i class="fas fa-home"></i> Início</a>
-          </li>
-
-          <li class="nav-item mx-1">
-            <a class="nav-link text-white font-weight-bold" href="/drogaria/public/sobre.html"><i class="fas fa-info-circle"></i> Sobre</a>
-          </li>
-
-          <!-- VISÍVEL APENAS QUANDO LOGADO -->
-          <li class="nav-item dropdown mx-1 area-logado" style="display:none">
-            <a class="nav-link dropdown-toggle text-white font-weight-bold" href="#" id="navbarDropdownRemedio" role="button"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-pills mr-1"></i> Medicamentos
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/drogaria/medicamento/form-medicamento.jsp">Adicionar novo remédio</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/drogaria/medicamento/listar-medicamentos.jsp">Ver todos</a>
-            </div>
-          </li>
-
-          <!-- VISÍVEL APENAS QUANDO LOGADO -->
-          <li class="nav-item dropdown mx-1 area-logado" style="display:none">
-            <a class="nav-link dropdown-toggle text-white font-weight-bold" href="#" id="navbarDropdown" role="button"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-user mr-1"></i> <span id="span-nome-usuario">Usuário</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/drogaria/adm/editar-adm.jsp">Meus dados</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item text-danger" href="#" id="btnLogout">Sair</a>
-            </div>
-          </li>
-
-          <!-- VISÍVEL APENAS QUANDO NÃO LOGADO -->
-          <li class="nav-item mx-1 area-nao-logado" style="display:none">
-            <a class="nav-link text-white font-weight-bold" href="/drogaria/public/login.html">
-              <i class="fas fa-user"></i> Login
-            </a>
-          </li>
         </ul>
       </div>
     </div>

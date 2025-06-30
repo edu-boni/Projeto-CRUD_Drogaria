@@ -45,7 +45,7 @@ function incluiuHeaderFooter() {
   });
 
   const btnLogout = document.getElementById("btnLogout");
-  btnLogout?.addEventListener("click", function(e) {
+  btnLogout.addEventListener("click", function(e) {
     e.preventDefault();
     Swal.fire({
       title: "Deseja realmente sair?",
