@@ -1,0 +1,40 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-cyan">
+    <div class="container">
+
+      <!-- LOGO -->
+      <a class="navbar-brand d-flex align-items-center" href="/drogaria/index.jsp">
+        <img src="/drogaria/assets/images/logo.png" alt="Logo" style="height: 50px; margin-right: 10px;">
+      </a>
+
+      <!-- BOTÃO COLAPSÁVEL (MOBILE) -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- CONTEÚDO DA NAVBAR -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+
+        <!-- BARRA DE BUSCA -->
+        <form action="/drogaria/buscar-medicamento" method="get" class="form-inline mx-auto my-2 my-md-0 w-100" id="form-busca">
+          <div class="input-group w-100">
+            <input name="search" class="form-control rounded-left" type="search" placeholder="Buscar" aria-label="Buscar" minlength="3" required>
+            <div class="input-group-append">
+              <button class="btn btn-light rounded-right" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- MENU -->
+        <ul class="navbar-nav ml-auto">
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MENSAGEM ALERTA -->
+  <div class="text-center pt-3" role="alert" id="alerta-mensagem"></div>
+</header>

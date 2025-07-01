@@ -1,10 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<% String contextPath = request.getContextPath(); %>
 
 <div class="modal fade" id="modal-${param.id}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-${param.id}" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form action="<%= contextPath %>/UpdateMedicamentoServlet" method="post" class="row p-4">
+      <form action="/drogaria/UpdateMedicamentoServlet" method="post" class="row p-4">
         <div class="modal-header col-12">
           <h5 class="modal-title" id="modalLabel-${param.id}">Editar Medicamento</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
