@@ -1,9 +1,7 @@
 document.addEventListener("footer-carregado", function () {
   const form = document.getElementById('form-cadastro-adm');
-  if (!form) {
-    return;
-  }
-
+  if (!form) return;
+  
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 

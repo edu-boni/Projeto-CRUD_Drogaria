@@ -13,18 +13,27 @@ import java.util.List;
 @WebServlet("/CreateMedicamentoServlet")
 public class CreateMedicamentoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private MedicamentoDAO dao;
+
+    @Override
+    public void init() throws ServletException {
+        dao = MedicamentoDAO.getInstance();
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuarioLogado") == null) {
-            response.sendRedirect("index.jsp");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"message\": \"Sessão expirada. Faça login novamente.\"}");
             return;
         }
 
-        String msg = "";
         String nome = request.getParameter("nome");
         String principio = request.getParameter("principio_ativo");
         String fabricante = request.getParameter("fabricante");
@@ -36,52 +45,28 @@ public class CreateMedicamentoServlet extends HttpServlet {
         String precoStr = request.getParameter("preco");
         String imagem_url = request.getParameter("imagem_url");
 
+        String jsonResponse;
+
         double preco = 0.0;
         try {
             preco = Double.parseDouble(precoStr);
         } catch (NumberFormatException e) {
-            request.setAttribute("erro", "Preço inválido.");
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            jsonResponse = "{\"message\": \"Preço inválido.\"}";
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(jsonResponse);
             return;
         }
 
         Medicamento medicamento = new Medicamento(nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url);
 
-        MedicamentoDAO dao = MedicamentoDAO.getInstance();
-        
         if (dao.adicionarMedicamento(medicamento)) {
-            msg = "Medicamento cadastrado com sucesso!";
-            request.setAttribute("mensagem", msg);
-            request.setAttribute("classAlert", "p-0 alert alert-success");
-
-            getServletContext().setAttribute("listaMedicamentos", dao.getMedicamentos());
-            
-            //Caso deseje popular o dao ao cadastrar o primeiro medicamento, descomente o trecho a seguir
-            
-            /*	if(medicamento.getId() == 1) {
-	                List<Medicamento> mocks = new ArrayList<>();
-	                mocks.add(new Medicamento("Paracetamol", "Paracetamol", "Medley", "2025-12-31", "L001", "Dor e febre", "500mg", "Comprimido", 5.99, "images/paracetamol.png"));
-	                mocks.add(new Medicamento("Dipirona", "Dipirona Monoidratada", "Neo Química", "2026-06-15", "L002", "Analgésico", "1g", "Comprimido", 4.50, "images/dipirona.png"));
-	                mocks.add(new Medicamento("Ibuprofeno", "Ibuprofeno", "Bayer", "2026-01-20", "L003", "Inflamação e dor", "600mg", "Comprimido", 7.90, "images/ibuprofeno.png"));
-	                mocks.add(new Medicamento("Amoxicilina", "Amoxicilina", "EMS", "2025-11-10", "L004", "Infecção bacteriana", "500mg", "Cápsula", 12.75, "images/amoxicilina.png"));
-	                mocks.add(new Medicamento("Loratadina", "Loratadina", "Medquímica", "2026-04-01", "L005", "Alergia", "10mg", "Comprimido", 3.80, "images/loratadina.png"));
-	                mocks.add(new Medicamento("Omeprazol", "Omeprazol", "Eurofarma", "2026-02-14", "L006", "Refluxo", "20mg", "Cápsula", 6.20, "images/omeprazol.png"));
-	                mocks.add(new Medicamento("Salbutamol", "Salbutamol", "GSK", "2025-09-30", "L007", "Asma", "100mcg", "Spray", 15.30, "images/salbutamol.png"));
-	                mocks.add(new Medicamento("Metformina", "Metformina", "Teuto", "2026-03-22", "L008", "Diabetes tipo 2", "850mg", "Comprimido", 8.60, "images/metformina.png"));
-	                mocks.add(new Medicamento("Cetoconazol", "Cetoconazol", "Prati-Donaduzzi", "2025-10-05", "L009", "Infecções fúngicas", "200mg", "Comprimido", 9.45, "images/cetoconazol.png"));
-	                mocks.add(new Medicamento("Azitromicina", "Azitromicina", "EMS", "2026-07-18", "L010", "Infecção respiratória", "500mg", "Comprimido", 18.99, "images/azitromicina.png"));
-	
-	                for (Medicamento m : mocks) {
-	                    dao.adicionarMedicamento(m);
-	                }
-            	}
-            */
+            jsonResponse = String.format("{\"message\": \"Medicamento '%s' cadastrado com sucesso!\"}", nome);
+            response.setStatus(HttpServletResponse.SC_OK);
         } else {
-            msg = "Erro ao cadastrar o medicamento.";
-            request.setAttribute("mensagem", msg);
-            request.setAttribute("classAlert", "p-0 alert alert-danger");
+            jsonResponse = "{\"message\": \"Erro ao cadastrar o medicamento.\"}";
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        request.getRequestDispatcher("/index.jsp").forward(request, response);
+        response.getWriter().write(jsonResponse);
     }
 }

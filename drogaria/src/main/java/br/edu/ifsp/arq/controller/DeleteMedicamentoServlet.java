@@ -37,6 +37,6 @@ public class DeleteMedicamentoServlet extends HttpServlet {
         }
 
         request.setAttribute("mensagem", msg);
-        request.getRequestDispatcher("/ReadMedicamentoServlet").forward(request, response);
+        response.sendRedirect(contextPath + "/medicamento/lista-medicamentos.html");
     }
 }

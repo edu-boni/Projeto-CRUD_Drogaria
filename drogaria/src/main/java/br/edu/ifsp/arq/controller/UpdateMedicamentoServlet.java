@@ -13,51 +13,44 @@ public class UpdateMedicamentoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        String path = request.getServletPath();
-
-        if ("/editar-medicamento".equals(path)) {
-            int id;
-            try {
-                id = Integer.parseInt(request.getParameter("id"));
-            } catch (NumberFormatException e) {
-                HttpSession session = request.getSession();
-                session.setAttribute("mensagem", "ID inválido.");
-                session.setAttribute("classAlert", "p-0 alert alert-danger");
-                response.sendRedirect("ReadMedicamentoServlet");
-                return;
-            }
-
-            MedicamentoDAO dao = MedicamentoDAO.getInstance();
-            Medicamento m = dao.getMedicamentoPorId(id);
-
-            if (m != null) {
-                request.setAttribute("medicamento", m);
-                request.getRequestDispatcher("medicamento/editar-medicamento.jsp").forward(request, response);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("mensagem", "Medicamento não encontrado.");
-                session.setAttribute("classAlert", "p-0 alert alert-danger");
-                response.sendRedirect("ReadMedicamentoServlet");
-            }
+        String idParam = request.getParameter("id");
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"success\": false, \"message\": \"ID inválido.\"}");
+            return;
         }
+
+        MedicamentoDAO dao = MedicamentoDAO.getInstance();
+        Medicamento med = dao.getMedicamentoPorId(id);
+        if (med == null) {
+            response.getWriter().write("{\"success\": false, \"message\": \"Medicamento não encontrado.\"}");
+            return;
+        }
+
+        String json = new com.google.gson.Gson().toJson(med);
+        response.getWriter().write(json);
     }
 
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         String msg;
         int id;
 
         try {
             id = Integer.parseInt(request.getParameter("id"));
         } catch (NumberFormatException e) {
-            msg = "ID inválido.";
-            request.setAttribute("mensagem", msg);
-            request.setAttribute("classAlert", "alert alert-danger");
-            request.getRequestDispatcher("/ReadMedicamentoServlet").forward(request, response);
+            msg = "{\"success\": false, \"message\": \"ID inválido.\"}";
+            response.getWriter().write(msg);
             return;
         }
 
@@ -72,14 +65,12 @@ public class UpdateMedicamentoServlet extends HttpServlet {
         String precoStr = request.getParameter("preco");
         String imagem_url = request.getParameter("imagem_url");
 
-        double preco = 0.0;
+        double preco;
         try {
             preco = Double.parseDouble(precoStr);
         } catch (NumberFormatException e) {
-            msg = "Preço inválido.";
-            request.setAttribute("mensagem", msg);
-            request.setAttribute("classAlert", "alert alert-danger");
-            request.getRequestDispatcher("/ReadMedicamentoServlet").forward(request, response);
+            msg = "{\"success\": false, \"message\": \"Preço inválido.\"}";
+            response.getWriter().write(msg);
             return;
         }
 
@@ -89,16 +80,11 @@ public class UpdateMedicamentoServlet extends HttpServlet {
         boolean atualizado = dao.atualizarMedicamento(id, medicamentoAtualizado);
 
         if (atualizado) {
-            msg = "Medicamento atualizado com sucesso!";
-            request.setAttribute("classAlert", "alert alert-success");
+            msg = "{\"success\": true, \"message\": \"Medicamento atualizado com sucesso!\"}";
         } else {
-            msg = "Medicamento não encontrado para atualização.";
-            request.setAttribute("classAlert", "alert alert-danger");
+            msg = "{\"success\": false, \"message\": \"Medicamento não encontrado para atualização.\"}";
         }
 
-        request.setAttribute("mensagem", msg);
-        request.getRequestDispatcher("/ReadMedicamentoServlet").forward(request, response);
-        
+        response.getWriter().write(msg);
     }
-
 }
