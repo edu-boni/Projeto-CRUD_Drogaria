@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="/drogaria/assets/css/style.css">
+	<title>Farmácia Bem-estar</title>
+	<link rel="icon" type="image/x-icon" href="/drogaria/assets/images/favicon.ico">
+</head>
+<body>
+<div id="header-placeholder"></div>
+	
+	<div id="lista-medicamentos" class="container mt-5 justify-content-center d-flex flex-column align-items-center" style="min-height: 80vh"></div>
+	<div id="modais-container"></div>
+	
+<div id="footer-placeholder"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/drogaria/assets/js/header_footer_include.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/drogaria/assets/js/sweet_alerts.js"></script>
+<script src="/drogaria/assets/js/exibe_mensagem.js"></script>
+
+<script>
+  // Formata preço em moeda BRL
+  function formatarPreco(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  // Cria um card de medicamento, incluindo botão "Editar"
+  function criarCardMedicamento(med, usuarioLogado) {
+    const divCard = document.createElement('div');
+    divCard.className = 'col-md-3 col-sm-12 mb-4 d-flex flex-column align-items-center hover-card';
+
+    // Imagem
+    const img = document.createElement('img');
+    img.className = 'img-fluid mb-4';
+    img.style.maxHeight = '120px';
+    img.alt = med.nome;
+    img.src = med.imagem_url || '/drogaria/images/assets/semimagem.png';
+    img.onerror = function() { this.src = '/drogaria/assets/images/semimagem.png'; };
+
+    // Informações
+    const divInfo = document.createElement('div');
+    divInfo.className = 'p-3 w-100 bg-cyan-light';
+    divInfo.style.borderRadius = '6px';
+
+    const nomeP = document.createElement('p');
+    nomeP.className = 'txt-cyan';
+    nomeP.style.fontSize = '20px';
+    nomeP.style.fontWeight = 'bold';
+    nomeP.style.margin = '0';
+    nomeP.textContent = med.nome;
+
+    const dosagemP = document.createElement('p');
+    dosagemP.className = 'txt-cyan';
+    dosagemP.style.margin = '0';
+    dosagemP.textContent = med.dosagem;
+
+    divInfo.appendChild(nomeP);
+    divInfo.appendChild(dosagemP);
+
+    if (usuarioLogado) {
+      const precoOriginal = document.createElement('p');
+      precoOriginal.className = 'mt-1 mb-0 text-secondary';
+      precoOriginal.style.fontSize = '15px';
+      precoOriginal.style.textDecoration = 'line-through';
+      precoOriginal.textContent = formatarPreco(med.preco);
+
+      const precoComDescontoDiv = document.createElement('div');
+      precoComDescontoDiv.className = 'd-flex space-between align-items-center';
+      precoComDescontoDiv.style.fontSize = '20px';
+      precoComDescontoDiv.style.fontWeight = 'bold';
+
+      const precoComDesconto = document.createElement('p');
+      precoComDesconto.textContent = formatarPreco(med.preco * 0.9);
+
+      const tagDesconto = document.createElement('p');
+      tagDesconto.className = 'text-danger col-md-6';
+      tagDesconto.innerHTML = '<i class="fas fa-solid fa-tag"></i> -10%';
+
+      precoComDescontoDiv.appendChild(precoComDesconto);
+      precoComDescontoDiv.appendChild(tagDesconto);
+
+      divInfo.appendChild(precoOriginal);
+      divInfo.appendChild(precoComDescontoDiv);
+    } else {
+      const precoP = document.createElement('p');
+      precoP.className = 'mt-1 mb-0';
+      precoP.style.fontSize = '20px';
+      precoP.style.fontWeight = 'bold';
+      precoP.textContent = formatarPreco(med.preco);
+      divInfo.appendChild(precoP);
+    }
+
+    // Botão Editar que abre modal
+    if (usuarioLogado) {
+      const btnEditar = document.createElement('button');
+      btnEditar.className = 'btn btn-link mt-2 p-0';
+      btnEditar.textContent = 'Editar';
+      btnEditar.setAttribute('data-toggle', 'modal');
+      btnEditar.setAttribute('data-target', `#modal-${med.id}`);
+      divInfo.appendChild(btnEditar);
+    }
+
+    divCard.appendChild(img);
+    divCard.appendChild(divInfo);
+
+    return divCard;
+  }
+
+  // Cria modal para o medicamento (simplificado)
+  function criarModalMedicamento(med) {
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'modal fade';
+    modalDiv.id = `modal-${med.id}`;
+    modalDiv.tabIndex = -1;
+    modalDiv.setAttribute('role', 'dialog');
+    modalDiv.setAttribute('aria-labelledby', `modalLabel-${med.id}`);
+    modalDiv.setAttribute('aria-hidden', 'true');
+
+    modalDiv.innerHTML = `
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form class="row p-4">
+            <div class="modal-header col-12">
+              <h5 class="modal-title" id="modalLabel-${med.id}">Editar Medicamento</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <input type="hidden" name="id" value="${med.id}" />
+
+            <div class="col-md-6 mb-3 mt-3">
+              <label for="nome-${med.id}" class="form-label">Nome</label>
+              <input type="text" class="form-control" id="nome-${med.id}" name="nome" value="${med.nome}" required>
+            </div>
+
+            <div class="col-md-6 mb-3 mt-3">
+              <label for="principio_ativo-${med.id}" class="form-label">Princípio Ativo</label>
+              <input type="text" class="form-control" id="principio_ativo-${med.id}" name="principio_ativo" value="${med.principio_ativo}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="fabricante-${med.id}" class="form-label">Fabricante</label>
+              <input type="text" class="form-control" id="fabricante-${med.id}" name="fabricante" value="${med.fabricante}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="validade-${med.id}" class="form-label">Validade</label>
+              <input type="date" class="form-control" id="validade-${med.id}" name="validade" value="${med.validade}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="lote-${med.id}" class="form-label">Lote</label>
+              <input type="text" class="form-control" id="lote-${med.id}" name="lote" value="${med.lote}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="indicacao-${med.id}" class="form-label">Indicação</label>
+              <input type="text" class="form-control" id="indicacao-${med.id}" name="indicacao" value="${med.indicacao}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="dosagem-${med.id}" class="form-label">Dosagem</label>
+              <input type="text" class="form-control" id="dosagem-${med.id}" name="dosagem" value="${med.dosagem}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="forma-${med.id}" class="form-label">Forma</label>
+              <input type="text" class="form-control" id="forma-${med.id}" name="forma" value="${med.forma}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="preco-${med.id}" class="form-label">Preço</label>
+              <input type="number" step="0.01" class="form-control" id="preco-${med.id}" name="preco" value="${med.preco}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="imagem_url-${med.id}" class="form-label">URL da Imagem</label>
+              <input type="url" class="form-control" id="imagem_url-${med.id}" name="imagem_url" value="${med.imagem_url || ''}" maxlength="255">
+            </div>
+
+            <div class="col-12 d-flex justify-content-between mt-3">
+              <a href="#" data-id="${med.id}" data-nome="${med.nome}" class="btnExcluirMedicamento btn btn-danger">Excluir</a>
+              <button type="submit" class="btn bg-cyan">Salvar opções</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+
+    return modalDiv;
+  }
+
+  async function carregarMedicamentos() {
+    const container = document.getElementById('lista-medicamentos');
+    const modaisContainer = document.getElementById('modais-container');
+    container.innerHTML = '';
+    modaisContainer.innerHTML = '';
+
+    const usuarioLogado = Boolean(sessionStorage.getItem('usuarioLogado')); // ajuste conforme seu login
+
+    try {
+      const response = await fetch('/drogaria/ReadMedicamentoServlet', {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!response.ok) {
+        container.innerHTML = '<h2>Erro ao carregar medicamentos.</h2>';
+        return;
+      }
+
+      const listaMedicamentos = await response.json();
+
+      if (!listaMedicamentos || listaMedicamentos.length === 0) {
+        container.innerHTML = `
+          <div class="col-md-12 row d-flex">
+            <h2 class="txt-cyan col-md-6 col-sm-12">Nenhum medicamento encontrado</h2>
+            <a href="/drogaria/medicamento/form-medicamento.html" 
+               class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0">
+              <i class="fas fa-plus-circle"></i> Cadastrar medicamento
+            </a>
+          </div>
+        `;
+      } else {
+        // Header + botão cadastrar
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'col-md-12 row d-flex';
+
+        const h2 = document.createElement('h2');
+        h2.className = 'txt-cyan col-md-6 col-sm-12';
+        h2.textContent = 'Todos os medicamentos';
+
+        const cadastrarBtn = document.createElement('a');
+        cadastrarBtn.href = '/drogaria/medicamento/form-medicamento.html';
+        cadastrarBtn.className = 'btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0';
+        cadastrarBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar medicamento';
+
+        headerDiv.appendChild(h2);
+        headerDiv.appendChild(cadastrarBtn);
+        container.appendChild(headerDiv);
+
+        // Container para cards
+        const innerContainer = document.createElement('div');
+        innerContainer.className = 'container mb-5';
+
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'row';
+
+        listaMedicamentos.forEach(med => {
+          const card = criarCardMedicamento(med, usuarioLogado);
+          rowDiv.appendChild(card);
+
+          // Cria modal e adiciona no container de modais
+          if (usuarioLogado) {
+            const modal = criarModalMedicamento(med);
+            modaisContainer.appendChild(modal);
+          }
+        });
+
+        innerContainer.appendChild(rowDiv);
+        container.appendChild(innerContainer);
+        
+	  	configurarBotoesExcluirMedicamento();
+      }
+    } catch (error) {
+      container.innerHTML = '<h2>Erro inesperado ao carregar medicamentos.</h2>';
+      console.error(error);
+    }
+  }
+
+  document.addEventListener('footer-carregado', carregarMedicamentos);
+  
+  document.addEventListener("footer-carregado", function () {
+	  const modaisContainer = document.getElementById('modais-container');
+	  if (!modaisContainer) return;
+
+	  modaisContainer.addEventListener('submit', async function (e) {
+	    if (e.target.tagName.toLowerCase() !== 'form') return;
+
+	    e.preventDefault();
+
+	    const form = e.target;
+	    const formData = new URLSearchParams();
+
+	    for (const element of form.elements) {
+	      if (element.name && !element.disabled) {
+	        formData.append(element.name, element.value);
+	      }
+	    }
+
+	    try {
+	      const response = await fetch('/drogaria/UpdateMedicamentoServlet', {
+	        method: 'POST',
+	        body: formData
+	      });
+
+	      const json = await response.json();
+
+	      if (json.success) {
+	        // Fecha o modal
+	        $(`#${form.closest('.modal').id}`).modal('hide');
+
+	        // Salva mensagem em sessão
+	        sessionStorage.setItem("mensagem", json.message);
+	        sessionStorage.setItem("mensagem-cor", "alert-success");
+
+	        // Redireciona para recarregar a lista (e a mensagem será exibida via exibe_mensagem.js)
+	        window.location.href = '/drogaria/medicamento/lista-medicamentos.html';
+	      } else {
+	        exibe_mensagem(json.message, "alert-danger");
+	      }
+	    } catch (error) {
+	      console.error('Erro na atualização:', error);
+	      exibe_mensagem("Erro ao atualizar. Tente novamente mais tarde.", "alert-danger");
+	    }
+	  });
+	});
+</script>
+</body>
+</html>

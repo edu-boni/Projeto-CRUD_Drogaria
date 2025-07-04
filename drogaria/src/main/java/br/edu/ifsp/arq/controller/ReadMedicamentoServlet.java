@@ -6,6 +6,9 @@ import br.edu.ifsp.arq.model.Medicamento;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -15,12 +18,16 @@ public class ReadMedicamentoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         MedicamentoDAO dao = MedicamentoDAO.getInstance();
         ArrayList<Medicamento> lista = dao.getMedicamentos();
 
-        request.setAttribute("listaMedicamentos", lista);
-        request.getRequestDispatcher("/medicamento/listar-medicamentos.jsp").forward(request, response);
+        String json = new Gson().toJson(lista);
+        response.getWriter().write(json);
     }
+
     
     @Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

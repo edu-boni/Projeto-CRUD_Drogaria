@@ -60,7 +60,7 @@ fetch('/drogaria/include/footer.html')
          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownRemedio">
            <a class="dropdown-item" href="/drogaria/medicamento/form-medicamento.html">Adicionar novo remédio</a>
            <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="/drogaria/medicamento/listar-medicamentos.jsp">Ver todos</a>
+           <a class="dropdown-item" href="/drogaria/medicamento/lista-medicamentos.html">Ver todos</a>
          </div>
        `;
        menu.appendChild(liRemedios);
