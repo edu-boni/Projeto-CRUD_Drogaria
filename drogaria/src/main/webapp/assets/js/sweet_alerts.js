@@ -1,27 +1,4 @@
 function incluiuHeaderFooter() {
-  const btnExcluir = document.getElementById("btnExcluirConta");
-  if (btnExcluir) {
-    btnExcluir.addEventListener("click", function (e) {
-      e.preventDefault();
-      const id = btnExcluir.dataset.id;
-
-      Swal.fire({
-        title: "Deseja deletar a sua conta?",
-        text: "Essa ação não pode ser desfeita!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#dc143c",
-        cancelButtonColor: "#a9a9a9",
-        confirmButtonText: "Excluir conta",
-        cancelButtonText: "Cancelar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = "/drogaria/DeleteADMServlet?id=" + id;
-        }
-      });
-    });
-  }
-  
   const btnLogout = document.getElementById("btnLogout");
   btnLogout.addEventListener("click", function(e) {
     e.preventDefault();
@@ -38,7 +15,6 @@ function incluiuHeaderFooter() {
       if (result.isConfirmed) {
 		sessionStorage.removeItem("usuarioLogado");
 		window.location.href = "/drogaria/index.html";
-		window.location.reload(true);
       }
     });
   });

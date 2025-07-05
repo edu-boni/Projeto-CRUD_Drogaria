@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="/drogaria/assets/css/style.css">
+	<title>Farmácia Bem-estar</title>
+	<link rel="icon" type="image/x-icon" href="/drogaria/assets/images/favicon.ico">
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+  <main class="container justify-content-center d-flex align-items-center" style="min-height: 80vh">
+    <div>
+      <h3 class="mb-2 txt-cyan">Meus dados</h3>
+      <p class="text-secondary">Altere suas informações</p>
+
+      <form id="form-dados-usuario" class="row">
+        <input type="hidden" name="id" id="id" />
+
+        <div class="form-group col-md-6">
+          <label for="nome">Nome</label>
+          <input type="text" class="form-control" id="nome" name="nome" required maxlength="100">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="cpf">CPF</label>
+          <input type="text" class="form-control" id="cpf" name="cpf" required maxlength="14">
+        </div>
+
+        <div class="form-group col-md-12">
+          <label for="email">E-mail</label>
+          <input type="email" class="form-control" id="email" name="email" required maxlength="100">
+        </div>
+
+        <div class="form-group col-md-12 text-md-right">
+          <a href="#" data-toggle="modal" data-target="#alterarSenhaModal" class="text-secondary">Alterar senha</a>
+        </div>
+
+        <div class="form-group col-md-12 d-flex justify-content-between mt-3">
+          <a href="#" id="btnExcluirConta" class="btn btn-danger col-md-5">Excluir Conta</a>
+          <button type="submit" class="btn bg-cyan col-md-5">Atualizar</button>
+        </div>
+      </form>
+
+      <!-- Modal -->
+      <div class="modal fade" id="alterarSenhaModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered">
+          <form id="form-alterar-senha" class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Alterar Senha</h5>
+              <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" name="id" id="idSenha" />
+              <div class="form-group">
+                <label for="senhaAtual">Senha atual</label>
+                <input type="password" class="form-control" id="senhaAtual" name="senhaAtual" required>
+              </div>
+              <div class="form-group">
+                <label for="novaSenha">Nova senha</label>
+                <input type="password" class="form-control" id="novaSenha" name="novaSenha" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn bg-cyan">Salvar nova senha</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script src="/drogaria/assets/js/header_footer_include.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/drogaria/assets/js/sweet_alerts.js"></script>
+  <script src="/drogaria/assets/js/exibe_mensagem.js"></script>
+
+  <script>
+    document.addEventListener("footer-carregado", () => {
+      const usuario = sessionStorage.getItem("usuarioLogado");
+      if (!usuario) return;
+
+      const dados = JSON.parse(usuario);
+      const senhaOculta = '*'.repeat((dados.senha || "").length);
+
+      document.getElementById("id").value = dados.id;
+      document.getElementById("idSenha").value = dados.id;
+      document.getElementById("nome").value = dados.nome;
+      document.getElementById("cpf").value = dados.cpf;
+      document.getElementById("email").value = dados.email;
+      document.getElementById("senha").value = senhaOculta;
+    });
+
+    document.getElementById("form-dados-usuario").addEventListener("submit", async function (e) {
+	   	e.preventDefault();
+	   	  const formData = new URLSearchParams(new FormData(this));
+	   	  try {
+	   	    const resp = await fetch("/drogaria/UpdateUserServlet", {
+	   	      method: "POST",
+	   	      body: formData
+	   	    });
+	   	    const json = await resp.json();
+	   	    if (json.success) {
+
+	   	    	const dadosAtualizados = {
+	   	        id: formData.get("id"),
+	   	        nome: formData.get("nome"),
+	   	        cpf: formData.get("cpf"),
+	   	        email: formData.get("email"),
+
+	   	        senha: (JSON.parse(sessionStorage.getItem("usuarioLogado")) || {}).senha || ""
+	   	      };
+	   	      sessionStorage.setItem("usuarioLogado", JSON.stringify(dadosAtualizados));
+	
+	   	      sessionStorage.setItem("mensagem", json.message);
+	   	      sessionStorage.setItem("mensagem-cor", "alert-success");
+	   	      location.reload();
+	   	    } else {
+	   	      exibe_mensagem(json.message, "alert-danger");
+	   	    }
+	   	  } catch (err) {
+	   	    exibe_mensagem("Erro ao atualizar.", "alert-danger");
+	   	  }
+	 });
+
+    document.getElementById("form-alterar-senha").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new URLSearchParams(new FormData(this));
+      try {
+        const resp = await fetch("/drogaria/UpdateUserServlet", {
+          method: "POST",
+          body: formData
+        });
+        const json = await resp.json();
+        if (json.success) {
+          $('#alterarSenhaModal').modal('hide');
+          exibe_mensagem("Senha alterada com sucesso!", "alert-success");
+        } else {
+          exibe_mensagem(json.message, "alert-danger");
+        }
+      } catch (err) {
+        exibe_mensagem("Erro ao alterar senha.", "alert-danger");
+      }
+    });
+    
+	const btnExcluir = document.getElementById("btnExcluirConta");
+	if (btnExcluir) {
+	  btnExcluir.addEventListener("click", function (e) {
+	    e.preventDefault();
+	    const id = document.getElementById("id").value;
+
+	    Swal.fire({
+	      title: "Deseja deletar a sua conta?",
+	      text: "Essa ação não pode ser desfeita!",
+	      icon: "warning",
+	      showCancelButton: true,
+	      confirmButtonColor: "#dc143c",
+	      cancelButtonColor: "#a9a9a9",
+	      confirmButtonText: "Excluir conta",
+	      cancelButtonText: "Cancelar"
+	    }).then((result) => {
+	      if (result.isConfirmed) {
+	        fetch(`/drogaria/DeleteUserServlet?id=${id}`)
+	          .then(resp => resp.json())
+	          .then(data => {
+	            sessionStorage.clear();
+	            sessionStorage.setItem("mensagem", data.message);
+	            sessionStorage.setItem("mensagem-cor", data.success ? "alert-success" : "alert-danger");
+	            window.location.href = "/drogaria/index.html";
+	          })
+	          .catch(() => {
+	            sessionStorage.setItem("mensagem", "Erro ao excluir conta.");
+	            sessionStorage.setItem("mensagem-cor", "alert-danger");
+	            window.location.href = "/drogaria/index.html";
+	          });
+	      }
+	    });
+	  });
+	}
+  </script>
+</body>
+</html>

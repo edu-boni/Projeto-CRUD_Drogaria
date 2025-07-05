@@ -50,20 +50,31 @@ fetch('/drogaria/include/footer.html')
      menu.appendChild(criarItemMenu("/drogaria/public/sobre.html", "fas fa-info-circle", "Sobre"));
 
      if (usuarioLogado) {
-       const liRemedios = document.createElement("li");
-       liRemedios.className = "nav-item dropdown mx-1";
-       liRemedios.innerHTML = `
-         <a class="nav-link dropdown-toggle text-white font-weight-bold" href="#" id="navbarDropdownRemedio"
-           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-           <i class="fas fa-pills mr-1"></i> Medicamentos
-         </a>
-         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownRemedio">
-           <a class="dropdown-item" href="/drogaria/medicamento/form-medicamento.html">Adicionar novo remédio</a>
-           <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="/drogaria/medicamento/lista-medicamentos.html">Ver todos</a>
-         </div>
-       `;
-       menu.appendChild(liRemedios);
+		if(usuarioLogado.isAdmin === true){
+	       const liRemedios = document.createElement("li");
+	       liRemedios.className = "nav-item dropdown mx-1";
+	       liRemedios.innerHTML = `
+	         <a class="nav-link dropdown-toggle text-white font-weight-bold" href="#" id="navbarDropdownRemedio"
+	           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	           <i class="fas fa-pills mr-1"></i> Medicamentos
+	         </a>
+	         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownRemedio">
+	           <a class="dropdown-item" href="/drogaria/medicamento/form-medicamento.html">Adicionar novo remédio</a>
+	           <div class="dropdown-divider"></div>
+	           <a class="dropdown-item" href="/drogaria/medicamento/lista-medicamentos.html">Ver todos</a>
+	         </div>
+	       `;
+	       menu.appendChild(liRemedios);
+	   }else{
+		   const li = document.createElement("li");
+		   li.className = "nav-item mx-1";
+		   li.innerHTML = `
+	         <a class="nav-link text-white font-weight-bold" href="/drogaria/medicamento/lista-medicamentos.html">
+	           <i class="fas fa-pills mr-1"></i> Medicamentos
+	         </a>
+	       `;
+		   menu.appendChild(li);
+	   }
 
        const liUsuario = document.createElement("li");
        liUsuario.className = "nav-item dropdown mx-1";
@@ -73,7 +84,7 @@ fetch('/drogaria/include/footer.html')
            <i class="fas fa-user mr-1"></i> <span id="span-nome-usuario">${usuarioLogado.nome || "Usuário"}</span>
          </a>
          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownUsuario">
-           <a class="dropdown-item" href="/drogaria/adm/editar-adm.jsp">Meus dados</a>
+           <a class="dropdown-item" href="/drogaria/user/editar-usuario.html">Meus dados</a>
            <div class="dropdown-divider"></div>
            <a class="dropdown-item text-danger" href="#" id="btnLogout">Sair</a>
          </div>
