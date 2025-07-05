@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     	  sessionStorage.setItem("usuarioLogado", JSON.stringify(data.usuario));
     	  sessionStorage.setItem("mensagem", data.message);
     	  sessionStorage.setItem("mensagem-cor", "alert-success");
-    	  window.location.href = "/drogaria/index.jsp";
+    	  window.location.href = "/drogaria/index.html";
     }else{
        	exibe_mensagem(data.message, "alert-danger");
       }

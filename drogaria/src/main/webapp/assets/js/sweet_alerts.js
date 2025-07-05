@@ -37,7 +37,8 @@ function incluiuHeaderFooter() {
     }).then((result) => {
       if (result.isConfirmed) {
 		sessionStorage.removeItem("usuarioLogado");
-		window.location.href = "/drogaria/index.jsp";
+		window.location.href = "/drogaria/index.html";
+		window.location.reload(true);
       }
     });
   });
