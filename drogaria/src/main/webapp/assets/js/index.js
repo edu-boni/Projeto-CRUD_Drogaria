@@ -33,13 +33,17 @@ document.addEventListener("footer-carregado", function () {
 	
 	 divSaudacao.appendChild(h2);
 	
-	 //Cria o botão cadastro medicamentos
-	 const botao = document.createElement("a");
-	 botao.href = "/drogaria/medicamento/form-medicamento.html";
-	 botao.className = "btn w-100 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-4 mt-1";
-	 botao.innerHTML = `<i class="fas fa-plus-circle"></i> Cadastrar medicamento`;
+	 if(usuarioLogado.isAdmin === true){
+		 //Cria o botão cadastro medicamentos
+		 const botao = document.createElement("a");
+		 botao.href = "/drogaria/medicamento/form-medicamento.html";
+		 botao.className = "btn w-100 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-4 mt-1";
+		 botao.innerHTML = `<i class="fas fa-plus-circle"></i> Cadastrar medicamento`;
+		 divSaudacao.appendChild(botao);
+	 }else{
+		h2.classList.add("mb-4");
+	 }
 	
-	 divSaudacao.appendChild(botao);
 });
 	
 //Conteúdo da seção vantagens
@@ -87,7 +91,7 @@ document.addEventListener("footer-carregado", function () {
 	 colCadastro.className = "col-md-5";
 	 colCadastro.innerHTML = `
 	   <h5 class="m-3 text-center txt-cyan">Cadastre-se</h5>
-	   <form id="form-cadastro-adm">
+	   <form id="form-cadastro-usuario">
 	     <div class="form-row">
 	       <div class="form-group col-6">
 	         <input type="text" name="nome" class="form-control" placeholder="Nome completo" required>

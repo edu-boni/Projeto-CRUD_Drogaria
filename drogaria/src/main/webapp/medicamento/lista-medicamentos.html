@@ -97,14 +97,14 @@
     }
 
     // Botão Editar que abre modal
-    if (usuarioLogado) {
-      const btnEditar = document.createElement('button');
-      btnEditar.className = 'btn btn-link mt-2 p-0';
-      btnEditar.textContent = 'Editar';
-      btnEditar.setAttribute('data-toggle', 'modal');
-      btnEditar.setAttribute('data-target', `#modal-${med.id}`);
-      divInfo.appendChild(btnEditar);
-    }
+    if (usuarioLogado.isAdmin === true) {
+	  const btnEditar = document.createElement('button');
+	  btnEditar.className = 'btn btn-link mt-2 p-0 txt-cyan';
+	  btnEditar.innerHTML = '<i class="fas fa-edit"></i> Editar';
+	  btnEditar.setAttribute('data-toggle', 'modal');
+	  btnEditar.setAttribute('data-target', `#modal-${med.id}`);
+	  divInfo.appendChild(btnEditar);
+	}
 
     divCard.appendChild(img);
     divCard.appendChild(divInfo);
@@ -203,7 +203,8 @@
     container.innerHTML = '';
     modaisContainer.innerHTML = '';
 
-    const usuarioLogado = Boolean(sessionStorage.getItem('usuarioLogado')); // ajuste conforme seu login
+    const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
+    const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
 
     try {
       const response = await fetch('/drogaria/ReadMedicamentoServlet', {
@@ -219,31 +220,46 @@
       const listaMedicamentos = await response.json();
 
       if (!listaMedicamentos || listaMedicamentos.length === 0) {
-        container.innerHTML = `
-          <div class="col-md-12 row d-flex">
-            <h2 class="txt-cyan col-md-6 col-sm-12">Nenhum medicamento encontrado</h2>
-            <a href="/drogaria/medicamento/form-medicamento.html" 
-               class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0">
-              <i class="fas fa-plus-circle"></i> Cadastrar medicamento
-            </a>
-          </div>
-        `;
+    	  if(usuarioLogado.isAdmin === true){
+	    	 container.innerHTML = `
+	          <div class="col-md-12 row d-flex">
+	            <h2 class="txt-cyan col-md-6 col-sm-12">Nenhum medicamento encontrado</h2>
+	            <a href="/drogaria/medicamento/form-medicamento.html" 
+	               class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0">
+	              <i class="fas fa-plus-circle"></i> Cadastrar medicamento
+	            </a>
+	          </div>
+	        `;
+    	 }else{
+    		 container.innerHTML = `
+   	          <div class="col-md-12 row d-flex">
+   	            <h2 class="txt-cyan text-center col-md-12 col-sm-12">Nenhum medicamento encontrado</h2>
+   	          </div>
+   	        `;
+    	 }
       } else {
         // Header + botão cadastrar
         const headerDiv = document.createElement('div');
         headerDiv.className = 'col-md-12 row d-flex';
 
         const h2 = document.createElement('h2');
-        h2.className = 'txt-cyan col-md-6 col-sm-12';
-        h2.textContent = 'Todos os medicamentos';
-
-        const cadastrarBtn = document.createElement('a');
-        cadastrarBtn.href = '/drogaria/medicamento/form-medicamento.html';
-        cadastrarBtn.className = 'btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0';
-        cadastrarBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar medicamento';
-
+        
         headerDiv.appendChild(h2);
-        headerDiv.appendChild(cadastrarBtn);
+
+		if(usuarioLogado.isAdmin === true){
+			h2.className = 'txt-cyan col-md-6 col-sm-12';
+	        h2.textContent = 'Todos os medicamentos';
+			
+	        const cadastrarBtn = document.createElement('a');
+	        cadastrarBtn.href = '/drogaria/medicamento/form-medicamento.html';
+	        cadastrarBtn.className = 'btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0';
+	        cadastrarBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar medicamento';
+	        headerDiv.appendChild(cadastrarBtn);
+		}else{
+			h2.className = 'txt-cyan text-center col-md-12 col-sm-12';
+	        h2.textContent = 'Todos os medicamentos';
+		}
+		
         container.appendChild(headerDiv);
 
         // Container para cards
