@@ -46,7 +46,7 @@ fetch('/drogaria/include/footer.html')
        return li;
      }
 
-     menu.appendChild(criarItemMenu("/drogaria/index.jsp", "fas fa-home", "Início"));
+     menu.appendChild(criarItemMenu("/drogaria/index.html", "fas fa-home", "Início"));
      menu.appendChild(criarItemMenu("/drogaria/public/sobre.html", "fas fa-info-circle", "Sobre"));
 
      if (usuarioLogado) {
