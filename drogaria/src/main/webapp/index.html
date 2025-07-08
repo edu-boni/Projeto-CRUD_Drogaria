@@ -99,6 +99,7 @@
 		</div>
 	</div>
 </main>
+<div id="modais-container"></div>
 <div id="footer-placeholder"></div>
 
 <script src="/drogaria/assets/js/index.js"></script>
@@ -113,82 +114,178 @@
 <script src="/drogaria/assets/js/cadastro_usuario.js"></script>
 
 <script>
-document.addEventListener("footer-carregado", async () => {
-  try {
-    const response = await fetch("/drogaria/ReadMedicamentoServlet");
-    const lista = await response.json();
 
-    const destaquecontainer = document.getElementById("destaque-container");
-    const todoscontainer = document.getElementById("todos-container");
+	let listaDeCategorias = [];
 
-    if (!lista || lista.length === 0) {
-      document.getElementById("destaque-medicamentos").remove();
-      document.getElementById("todos-medicamentos").remove();
-    } else {
-      document.getElementById("sem-medicamentos").remove();
+  document.addEventListener("footer-carregado", async () => {
+    try {
+      // Busca as categorias primeiro (essencial para os modais)
+      const catResponse = await fetch("/drogaria/CategoriaServlet");
+      if (!catResponse.ok) throw new Error('Falha ao buscar categorias');
+      listaDeCategorias = await catResponse.json();
 
-      const usuarioLogado = Boolean(sessionStorage.getItem('usuarioLogado'));
-      const destaque = [...lista].slice(-4).reverse(); // Últimos 4
-      const todos = [...lista].slice(0, 8); // Primeiros 8
+      // Em seguida, busca os medicamentos
+      const medResponse = await fetch("/drogaria/ReadMedicamentoServlet");
+      if (!medResponse.ok) throw new Error('Falha ao carregar medicamentos');
+      const lista = await medResponse.json();
 
-      destaque.forEach(med => {
-        const card = criaCard(med, usuarioLogado);
-        destaquecontainer.appendChild(card);
-      });
+      const destaqueContainer = document.getElementById("destaque-container");
+      const todosContainer = document.getElementById("todos-container");
+      const modaisContainer = document.getElementById("modais-container");
 
-      todos.forEach(med => {
-        const card = criaCard(med, usuarioLogado);
-        todoscontainer.appendChild(card);
-      });
+      if (!lista || lista.length === 0) {
+        document.getElementById("destaque-medicamentos").remove();
+        document.getElementById("todos-medicamentos").remove();
+      } else {
+        document.getElementById("sem-medicamentos").remove();
+
+        const usuarioLogadoJSON = sessionStorage.getItem('usuarioLogado');
+        const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
+        
+        const destaque = [...lista].sort((a, b) => (b.desconto || 0) - (a.desconto || 0)).slice(0, 4); // Últimos 4 com maior desconto
+        const todos = [...lista].slice(0, 8); // Primeiros 8
+
+        const processarLista = (container, listaDeMeds) => {
+            listaDeMeds.forEach(med => {
+                const card = criaCard(med, usuarioLogado);
+                container.appendChild(card);
+                if (usuarioLogado && usuarioLogado.isAdmin) {
+                    modaisContainer.appendChild(criarModalMedicamento(med));
+                }
+            });
+        };
+        
+        processarLista(destaqueContainer, destaque);
+        processarLista(todosContainer, todos);
+        
+        configurarBotoesExcluirMedicamento();
+      }
+    } catch (e) {
+      console.error("Erro ao carregar a página:", e);
     }
+  });
 
-  } catch (e) {
-    console.error("Erro ao carregar medicamentos:", e);
+  function formatarPreco(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
-});
 
+  function criaCard(med, usuarioLogado) {
+	    const col = document.createElement("div");
+	    col.className = "col-md-3 col-sm-12 mb-4 d-flex flex-column align-items-center hover-card";
 
-function criaCard(med, usuarioLogado) {
-  const col = document.createElement("div");
-  col.className = "col-md-3 col-sm-12 mb-4 d-flex flex-column align-items-center hover-card";
-  col.setAttribute("data-toggle", "modal");
-  col.setAttribute("data-target", usuarioLogado ? `#modal-${med.id}` : "#loginModal");
+	    const imgUrl = med.imagem_url?.trim() || "/drogaria/assets/images/semimagem.png";
+	    
+	    if (usuarioLogado && usuarioLogado.isAdmin) {
+	        col.setAttribute("data-toggle", "modal");
+	        col.setAttribute("data-target", `#modal-${med.id}`);
+	    }
 
-  const imgUrl = med.imagem_url?.trim() || "/drogaria/assets/images/semimagem.png";
-  const precoOriginal = med.preco.toFixed(2).replace(".", ",");
-  const precoDesconto = (med.preco * 0.9).toFixed(2).replace(".", ",");
+	    let cardHtml = `
+	        <img src="${imgUrl}" alt="${med.nome}" class="img-fluid mb-4" style="max-height:120px;"
+	             onerror="this.onerror=null;this.src='/drogaria/assets/images/semimagem.png';">
+	        <div class="p-3 w-100 bg-cyan-light" style="border-radius: 6px;">
+	            <p class="txt-cyan" style="font-size: 20px; font-weight: bold; margin: 0">${med.nome}</p>
+	            <p class="txt-cyan" style="margin: 0">${med.dosagem}</p>
+	    `;
 
-  let html = `
-    <img src="${imgUrl}" alt="${med.nome}" class="img-fluid mb-4" style="max-height:120px;"
-         onerror="this.onerror=null;this.src='/drogaria/assets/images/semimagem.png';">
-    <div class="p-3 w-100 bg-cyan-light" style="border-radius: 6px;">
-      <p class="txt-cyan" style="font-size: 20px; font-weight: bold; margin: 0">${med.nome}</p>
-      <p class="txt-cyan" style="margin: 0">${med.dosagem}</p>
-  `;
+	    if (usuarioLogado) {
+	        // Se o usuário está LOGADO, mostra o desconto (se houver)
+	        const descontoProduto = med.desconto || 0;
+	        if (descontoProduto > 0) {
+	            const precoFinal = med.preco * (1 - (descontoProduto / 100));
+	            cardHtml += `
+	                <p class="mt-1 mb-0 text-secondary" style="font-size: 15px; text-decoration: line-through;">${formatarPreco(med.preco)}</p>
+	                <div class="d-flex justify-content-between align-items-center" style="font-size: 20px; font-weight: bold;">
+	                    <p class="mb-0">${formatarPreco(precoFinal)}</p>
+	                    <p class="text-danger mb-0"><i class="fas fa-solid fa-tag"></i> -${descontoProduto.toFixed(0)}%</p>
+	                </div>`;
+	        } else {
+	            // Logado, mas o produto não tem desconto
+	            cardHtml += `<p class="mt-1 mb-0" style="font-size: 20px; font-weight: bold;">${formatarPreco(med.preco)}</p>`;
+	        }
+	    } else {
 
-  if (usuarioLogado) {
-    html += `
-      <p class="mt-1 mb-0 text-secondary" style="font-size: 15px; text-decoration: line-through">
-        R$ ${precoOriginal}
-      </p>
-      <div class="d-flex space-between align-items-center" style="font-size: 20px; font-weight: bold">
-        <p>R$ ${precoDesconto}</p>
-        <p class="text-danger col-md-6"><i class="fas fa-solid fa-tag"></i> -10%</p>
+			cardHtml += `<p class="mt-1 mb-0" style="font-size: 20px; font-weight: bold;">${formatarPreco(med.preco)}</p>`;
+	    }
+	    
+	    // Adiciona o botão "Editar" visualmente se for admin
+	    if (usuarioLogado && usuarioLogado.isAdmin) {
+	        cardHtml += `<span class="btn btn-link mt-2 p-0 txt-cyan"><i class="fas fa-edit"></i> Editar</span>`;
+	    }
+	    
+	    cardHtml += `</div>`;
+	    col.innerHTML = cardHtml;
+	    return col;
+	}
+
+  function criarModalMedicamento(med) {
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'modal fade';
+    modalDiv.id = `modal-${med.id}`;
+    modalDiv.tabIndex = -1;
+    
+    let optionsHtml = listaDeCategorias.map(cat => `<option value="${cat.value}" ${med.categoria === cat.value ? 'selected' : ''}>${cat.text}</option>`).join('');
+    
+    modalDiv.innerHTML = `
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form class="row p-4">
+            <div class="modal-header col-12"><h5 class="modal-title">Editar Medicamento</h5><button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button></div>
+            <input type="hidden" name="id" value="${med.id}" />
+            <div class="col-md-6 mb-3 mt-3"><label>Nome</label><input type="text" class="form-control" name="nome" value="${med.nome}" required></div>
+            <div class="col-md-6 mb-3 mt-3"><label>Categoria</label><select class="form-control" name="categoria" required><option value="">Selecione...</option>${optionsHtml}</select></div>
+            <div class="col-md-6 mb-3"><label>Princípio Ativo</label><input type="text" class="form-control" name="principio_ativo" value="${med.principio_ativo}" required></div>
+            <div class="col-md-6 mb-3"><label>Fabricante</label><input type="text" class="form-control" name="fabricante" value="${med.fabricante}" required></div>
+            <div class="col-md-6 mb-3"><label>Validade</label><input type="date" class="form-control" name="validade" value="${med.validade}" required></div>
+            <div class="col-md-6 mb-3"><label>Lote</label><input type="text" class="form-control" name="lote" value="${med.lote}" required></div>
+            <div class="col-md-6 mb-3"><label>Indicação</label><input type="text" class="form-control" name="indicacao" value="${med.indicacao}" required></div>
+            <div class="col-md-6 mb-3"><label>Dosagem</label><input type="text" class="form-control" name="dosagem" value="${med.dosagem}" required></div>
+            <div class="col-md-6 mb-3"><label>Forma</label><input type="text" class="form-control" name="forma" value="${med.forma}" required></div>
+            <div class="col-md-6 mb-3"><label>Preço</label><input type="number" step="0.01" class="form-control" name="preco" value="${med.preco}" required></div>
+            <div class="col-md-6 mb-3"><label>Desconto (%)</label><input type="number" step="0.01" class="form-control" name="desconto" value="${med.desconto || ''}" placeholder="Ex: 15 para 15%"></div>
+            <div class="col-md-6 mb-3"><label>URL da Imagem</label><input type="url" class="form-control" name="imagem_url" value="${med.imagem_url || ''}" maxlength="255"></div>
+            <div class="col-12 d-flex justify-content-between mt-3">
+              <a href="#" data-id="${med.id}" data-nome="${med.nome}" class="btnExcluirMedicamento btn btn-danger">Excluir</a>
+              <button type="submit" class="btn bg-cyan">Salvar alterações</button>
+            </div>
+          </form>
+        </div>
       </div>
     `;
-  } else {
-    html += `
-      <p class="mt-1 mb-0" style="font-size: 20px; font-weight: bold">
-        R$ ${precoOriginal}
-      </p>
-    `;
+    return modalDiv;
   }
+  
+  document.addEventListener("DOMContentLoaded", function () {
+	  const modaisContainer = document.getElementById('modais-container');
+	  if (!modaisContainer) return;
 
-  html += `</div>`;
-  col.innerHTML = html;
-  return col;
-}
+	  modaisContainer.addEventListener('submit', async function (e) {
+	    if (e.target.tagName.toLowerCase() !== 'form') return;
+	    e.preventDefault();
+	    const form = e.target;
+	    const formData = new URLSearchParams();
+	    for (const element of form.elements) {
+	      if (element.name && !element.disabled) {
+	        formData.append(element.name, element.value);
+	      }
+	    }
+	    try {
+	      const response = await fetch('/drogaria/UpdateMedicamentoServlet', { method: 'POST', body: formData });
+	      const json = await response.json();
+	      if (json.success) {
+	        $(`#${form.closest('.modal').id}`).modal('hide');
+	        sessionStorage.setItem("mensagem", json.message);
+	        sessionStorage.setItem("mensagem-cor", "alert-success");
+	        window.location.reload(); // Recarrega a página index para ver a mudança
+	      } else {
+	        exibe_mensagem(json.message, "alert-danger");
+	      }
+	    } catch (error) {
+	      console.error('Erro na atualização:', error);
+	      exibe_mensagem("Erro ao atualizar. Tente novamente mais tarde.", "alert-danger");
+	    }
+	  });
+  });
 </script>
-
 </body>
 </html>

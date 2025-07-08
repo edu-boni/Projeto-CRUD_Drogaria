@@ -1,6 +1,7 @@
 package br.edu.ifsp.arq.controller;
 
 import br.edu.ifsp.arq.dao.MedicamentoDAO;
+import br.edu.ifsp.arq.model.Categoria;
 import br.edu.ifsp.arq.model.Medicamento;
 
 import javax.servlet.ServletException;
@@ -44,20 +45,36 @@ public class CreateMedicamentoServlet extends HttpServlet {
         String forma = request.getParameter("forma");
         String precoStr = request.getParameter("preco");
         String imagem_url = request.getParameter("imagem_url");
+        String categoriaStr = request.getParameter("categoria");
+        String descontoStr = request.getParameter("desconto");
 
         String jsonResponse;
 
         double preco = 0.0;
+        double desconto = 0.0;
+        Categoria categoria = null;
+        
         try {
             preco = Double.parseDouble(precoStr);
+            if (descontoStr != null && !descontoStr.isEmpty()) {
+                desconto = Double.parseDouble(descontoStr);
+            }
+            if (categoriaStr != null && !categoriaStr.isEmpty()) {
+                categoria = Categoria.valueOf(categoriaStr);
+            }
         } catch (NumberFormatException e) {
-            jsonResponse = "{\"message\": \"Preço inválido.\"}";
+            jsonResponse = "{\"message\": \"Preço ou desconto inválido.\"}";
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(jsonResponse);
+            return;
+        } catch (IllegalArgumentException e) {
+            jsonResponse = "{\"message\": \"Categoria inválida.\"}";
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(jsonResponse);
             return;
         }
 
-        Medicamento medicamento = new Medicamento(nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url);
+        Medicamento medicamento = new Medicamento(nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url, categoria, desconto);
 
         if (dao.adicionarMedicamento(medicamento)) {
             jsonResponse = String.format("{\"message\": \"Medicamento '%s' cadastrado com sucesso!\"}", nome);

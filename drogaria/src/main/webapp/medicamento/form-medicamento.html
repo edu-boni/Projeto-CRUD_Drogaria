@@ -21,6 +21,13 @@
 				<label for="nome" class="form-label">Nome</label> <input type="text"
 					class="form-control" id="nome" name="nome" minlength="3" required>
 			</div>
+			
+			<div class="col-md-6 mb-3">
+				<label for="categoria" class="form-label">Categoria</label>
+				<select class="form-control" id="categoria" name="categoria" required>
+					<option value="" disabled selected>Carregando categorias...</option>
+				</select>
+			</div>
 	
 			<div class="col-md-6 mb-3">
 				<label for="principio_ativo" class="form-label">Princípio
@@ -67,6 +74,11 @@
 					type="number" step="0.01" class="form-control" id="preco"
 					name="preco" required>
 			</div>
+			
+			<div class="col-md-6 mb-3">
+				<label for="desconto" class="form-label">Desconto (%)</label> 
+				<input type="number" step="0.01" class="form-control" id="desconto" name="desconto" placeholder="Ex: 10 para 10%">
+			</div>
 	
 			<div class="col-md-6 mb-3">
 				<label for="imagem_url" class="form-label">URL da Imagem</label> <input
@@ -91,6 +103,35 @@
 <script src="/drogaria/assets/js/exibe_mensagem.js"></script>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoriaSelect = document.getElementById('categoria');
+
+    async function carregarCategorias() {
+        try {
+            const response = await fetch('/drogaria/CategoriaServlet');
+            if (!response.ok) {
+                throw new Error('Erro ao buscar categorias');
+            }
+            const categorias = await response.json();
+            
+            categoriaSelect.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
+
+            categorias.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.value;
+                option.textContent = cat.text;
+                categoriaSelect.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("Erro ao carregar categorias:", error);
+            categoriaSelect.innerHTML = '<option value="" disabled selected>Erro ao carregar</option>';
+        }
+    }
+
+    carregarCategorias();
+});
+
 document.addEventListener("footer-carregado", function () {
 	  const form = document.getElementById('form-cadastro-medicamento');
 	  if (!form) return;
@@ -109,7 +150,9 @@ document.addEventListener("footer-carregado", function () {
 	    formData.append('forma', form.forma.value);
 	    formData.append('preco', form.preco.value);
 	    formData.append('imagem_url', form.imagem_url.value);
-
+	    formData.append('categoria', form.categoria.value);
+	    formData.append('desconto', form.desconto.value);
+	    
 	    try {
 	      const response = await fetch('/drogaria/CreateMedicamentoServlet', {
 	        method: 'POST',

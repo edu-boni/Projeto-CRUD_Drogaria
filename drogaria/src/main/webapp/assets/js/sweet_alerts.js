@@ -39,11 +39,9 @@ function configurarBotoesExcluirMedicamento() {
         confirmButtonText: "Excluir",
         cancelButtonText: "Cancelar"
       }).then((result) => {
-		if (result.isConfirmed) {
-		  sessionStorage.setItem("mensagem", `Medicamento "${nome}" excluído com sucesso!`);
-		  sessionStorage.setItem("mensagem-cor", "alert-warning");
-		  window.location.href = "/drogaria/DeleteMedicamentoServlet?id=" + id;
-		}
+        if (result.isConfirmed) {
+          window.location.href = "/drogaria/DeleteMedicamentoServlet?id=" + id;
+        }
       });
     });
   });

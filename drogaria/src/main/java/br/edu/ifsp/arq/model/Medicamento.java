@@ -1,6 +1,8 @@
 package br.edu.ifsp.arq.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Medicamento implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -16,12 +18,16 @@ public class Medicamento implements Serializable {
 	private String forma;
 	private double preco;
 	private String imagem_url;
+	private Categoria categoria;
+	private double desconto; 
+	private List<Comentario> comentarios;
 	
 	public Medicamento() {
 		this.id = ++proximo_id;
+		this.comentarios = new ArrayList<>(); 
 	}
 
-	public Medicamento(String nome, String principio_ativo, String fabricante, String validade, String lote, String indicacao, String dosagem, String forma, double preco, String imagem_url) {
+	public Medicamento(String nome, String principio_ativo, String fabricante, String validade, String lote, String indicacao, String dosagem, String forma, double preco, String imagem_url, Categoria categoria, double desconto) {
 		this();
 		this.nome = nome;
 		this.principio_ativo = principio_ativo;
@@ -33,6 +39,8 @@ public class Medicamento implements Serializable {
 		this.forma = forma;
 		this.preco = preco;
 		this.imagem_url = imagem_url;
+		this.categoria = categoria;
+        this.desconto = desconto;
 	}
 
 	public String getNome() {
@@ -122,5 +130,28 @@ public class Medicamento implements Serializable {
 	public void setId(int id) {
 	    this.id = id;
 	}
+	
+	public Categoria getCategoria() {
+		 return categoria;
+   }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public double getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(double desconto) {
+        this.desconto = desconto;
+    }
+    
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+    public void adicionarComentario(Comentario comentario) {
+        this.comentarios.add(comentario);
+    }
 
 }

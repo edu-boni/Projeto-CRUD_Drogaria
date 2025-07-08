@@ -7,7 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import com.google.gson.Gson;
 import br.edu.ifsp.arq.dao.MedicamentoDAO;
+import br.edu.ifsp.arq.model.Categoria; 
 import br.edu.ifsp.arq.model.Medicamento;
 
 @WebServlet("/buscar-medicamento")
@@ -16,25 +18,17 @@ public class BuscarMedicamentoServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         String termoBusca = request.getParameter("search");
-        ArrayList<Medicamento> resultados = MedicamentoDAO.getInstance().buscarPorNome(termoBusca);
+        String categoria = request.getParameter("categoria");
 
-        request.setAttribute("resultados", resultados);
-        request.setAttribute("termoBusca", termoBusca);
+        ArrayList<Medicamento> resultados = MedicamentoDAO.getInstance().buscar(termoBusca, categoria);
 
-        String msg;
-        String classAlert;
-        if (resultados.isEmpty()) {
-            msg = "Nenhum medicamento encontrado com esse nome.";
-            classAlert = "p-0 alert alert-warning";
-        } else {
-            msg = resultados.size() + " medicamento(s) encontrado(s).";
-            classAlert = "p-0 alert alert-success";
-        }
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        request.setAttribute("mensagem", msg);
-        request.setAttribute("classAlert", classAlert);
-
-        getServletContext().getRequestDispatcher("/medicamento/resultado-busca.jsp").forward(request, response);
+        String json = new Gson().toJson(resultados);
+        
+        response.getWriter().write(json);
     }
 }

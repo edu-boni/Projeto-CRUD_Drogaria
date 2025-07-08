@@ -1,6 +1,7 @@
 package br.edu.ifsp.arq.controller;
 
 import br.edu.ifsp.arq.dao.MedicamentoDAO;
+import br.edu.ifsp.arq.model.Categoria;
 import br.edu.ifsp.arq.model.Medicamento;
 
 import javax.servlet.ServletException;
@@ -40,7 +41,7 @@ public class UpdateMedicamentoServlet extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
+    	response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         String msg;
@@ -64,17 +65,32 @@ public class UpdateMedicamentoServlet extends HttpServlet {
         String forma = request.getParameter("forma");
         String precoStr = request.getParameter("preco");
         String imagem_url = request.getParameter("imagem_url");
+        String categoriaStr = request.getParameter("categoria");
+        String descontoStr = request.getParameter("desconto");
 
         double preco;
+        double desconto = 0.0;
+        Categoria categoria = null;
+        
         try {
             preco = Double.parseDouble(precoStr);
+            if (descontoStr != null && !descontoStr.isEmpty()) {
+                desconto = Double.parseDouble(descontoStr);
+            }
+            if (categoriaStr != null && !categoriaStr.isEmpty()) {
+                categoria = Categoria.valueOf(categoriaStr);
+            }
         } catch (NumberFormatException e) {
-            msg = "{\"success\": false, \"message\": \"Preço inválido.\"}";
+            msg = "{\"success\": false, \"message\": \"Preço ou desconto inválido.\"}";
+            response.getWriter().write(msg);
+            return;
+        } catch (IllegalArgumentException e) {
+            msg = "{\"success\": false, \"message\": \"Categoria inválida.\"}";
             response.getWriter().write(msg);
             return;
         }
 
-        Medicamento medicamentoAtualizado = new Medicamento(nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url);
+        Medicamento medicamentoAtualizado = new Medicamento(nome, principio, fabricante, validade, lote, indicacao, dosagem, forma, preco, imagem_url, categoria, desconto);
 
         MedicamentoDAO dao = MedicamentoDAO.getInstance();
         boolean atualizado = dao.atualizarMedicamento(id, medicamentoAtualizado);

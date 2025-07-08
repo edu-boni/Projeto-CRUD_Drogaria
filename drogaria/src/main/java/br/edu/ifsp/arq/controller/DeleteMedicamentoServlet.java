@@ -15,9 +15,10 @@ public class DeleteMedicamentoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-    	String contextPath = request.getContextPath();
+        String contextPath = request.getContextPath();
         String idStr = request.getParameter("id");
         String msg;
+        String classAlert;
         int id;
 
         try {
@@ -26,17 +27,20 @@ public class DeleteMedicamentoServlet extends HttpServlet {
             boolean removido = dao.removerMedicamentoPorId(id);
             if (removido) {
                 msg = "Medicamento removido com sucesso!";
-                request.setAttribute("classAlert", "p-0 alert alert-danger");
+                classAlert = "alert-success"; 
             } else {
                 msg = "Medicamento não encontrado.";
-                request.setAttribute("classAlert", "p-0 alert alert-warning");
+                classAlert = "alert-warning";
             }
         } catch (NumberFormatException e) {
             msg = "ID inválido.";
-            request.setAttribute("classAlert", "p-0 alert alert-danger");
+            classAlert = "alert-danger";
         }
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("mensagem", msg);
+        session.setAttribute("mensagem-cor", classAlert);
 
-        request.setAttribute("mensagem", msg);
         response.sendRedirect(contextPath + "/medicamento/lista-medicamentos.html");
     }
 }

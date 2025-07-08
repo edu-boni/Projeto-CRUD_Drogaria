@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport"content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="/drogaria/assets/css/style.css">
+	<title>Resultados da Busca - Farmácia Bem-estar</title>
+	<link rel="icon" type="image/x-icon" href="/drogaria/assets/images/favicon.ico">
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main class="container mt-5" style="min-height: 80vh">
+    <h2 class="mb-4" id="titulo-busca"></h2>
+    <div id="resultados-container"></div>
+</main>
+
+<div id="footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/drogaria/assets/js/header_footer_include.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/drogaria/assets/js/sweet_alerts.js"></script>
+<script src="/drogaria/assets/js/exibe_mensagem.js"></script>
+
+<script>
+    function formatarPreco(valor) {
+        return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+    
+    function criarCardResultado(med, usuarioLogado) {
+        const cardWrapper = document.createElement('div');
+        cardWrapper.className = 'col-md-12 mb-4';
+        
+        const imgUrl = med.imagem_url?.trim() || "/drogaria/assets/images/semimagem.png";
+
+        let precoHtml = '';
+        if (usuarioLogado) {
+            const descontoProduto = med.desconto || 0;
+            if (descontoProduto > 0) {
+                const precoFinal = med.preco * (1 - (descontoProduto / 100));
+                precoHtml = `<p class="card-text mb-0"><strong>Preço:</strong> <span class="text-secondary" style="text-decoration: line-through;">${formatarPreco(med.preco)}</span> <strong class="ml-2">${formatarPreco(precoFinal)}</strong> <span class="badge badge-danger ml-2"><i class="fas fa-tag"></i> -${descontoProduto.toFixed(0)}%</span></p>`;
+            } else {
+                precoHtml = `<p class="card-text mb-0"><strong>Preço:</strong> ${formatarPreco(med.preco)}</p>`;
+            }
+        } else {
+            precoHtml = `<p class="card-text mb-0"><strong>Preço:</strong> ${formatarPreco(med.preco)}</p>`;
+        }
+        
+        let comentariosHtml = '';
+        if (med.comentarios && med.comentarios.length > 0) {
+            const comentariosOrdenados = [...med.comentarios].sort((a, b) => new Date(b.data.split(' ')[0].split('/').reverse().join('-')) - new Date(a.data.split(' ')[0].split('/').reverse().join('-')));
+            comentariosHtml = comentariosOrdenados.map(c => `
+                <div class="comentario-item mt-2">
+                    <strong>${c.usuarioNome}</strong> <small class="text-muted">em ${c.data}</small>
+                    <p class="mb-0 bg-light p-2 rounded">${c.texto}</p>
+                </div>
+            `).join('<hr class="my-2">');
+        }
+
+        let formComentarioHtml = '';
+        if (usuarioLogado && !usuarioLogado.isAdmin) {
+             formComentarioHtml = `
+                <div class="form-comentario-wrapper mt-3">
+                    <form class="form-comentario" data-medicamento-id="${med.id}">
+                        <input type="hidden" name="avaliacao" value="5">
+                        <input type="text" name="texto" class="form-comentario-input" placeholder="Adicione um comentário..." required>
+                        <button type="submit" class="form-comentario-btn"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>`;
+        }
+        
+        cardWrapper.innerHTML = `
+            <div class="card-resultado-busca">
+                <div class="row">
+                    <div class="col-md-auto text-center" style="flex: 0 0 120px;">
+                        <img src="${imgUrl}" alt="${med.nome}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 6px;" onerror="this.onerror=null;this.src='/drogaria/assets/images/semimagem.png';">
+                    </div>
+                    <div class="col-md">
+                        <h5 class="card-title mb-1">${med.nome}</h5>
+                        <p class="card-text mb-1"><small><strong>Princípio Ativo:</strong> ${med.principio_ativo}</small></p>
+                        <p class="card-text mb-1"><small><strong>Fabricante:</strong> ${med.fabricante}</small></p>
+                        ${precoHtml}
+                    </div>
+                </div>
+                <div class="comentarios-section">
+                    ${comentariosHtml}
+                    ${formComentarioHtml}
+                </div>
+            </div>`;
+        return cardWrapper;
+    }
+
+    document.addEventListener("footer-carregado", async () => {
+        const container = document.getElementById('resultados-container');
+        const titulo = document.getElementById('titulo-busca');
+        container.innerHTML = '<p class="text-center">Buscando...</p>';
+
+        const categoriasMap = {};
+        try {
+            const catResponse = await fetch('/drogaria/CategoriaServlet');
+            const listaCategorias = await catResponse.json();
+            listaCategorias.forEach(cat => {
+                categoriasMap[cat.value] = cat.text;
+            });
+        } catch (e) {
+            console.error("Não foi possível carregar as categorias para o título.", e);
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const termoBusca = params.get('search');
+        const categoriaValor = params.get('categoria');
+        
+        let tituloHtml = `Resultados para: <strong>"${termoBusca || 'Tudo'}"</strong>`;
+        if (categoriaValor && categoriaValor.toUpperCase() !== 'TODOS') {
+            const categoriaTexto = categoriasMap[categoriaValor] || categoriaValor;
+            tituloHtml += ` em <strong>${categoriaTexto}</strong>`;
+        }
+        titulo.innerHTML = tituloHtml;
+        
+        const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
+        const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
+        
+        try {
+            const response = await fetch(`/drogaria/buscar-medicamento?search=${termoBusca || ''}&categoria=${categoriaValor || 'TODOS'}`);
+            const resultados = await response.json();
+
+            container.innerHTML = ''; 
+
+            if (!resultados || resultados.length === 0) {
+                container.innerHTML = `<p class="text-center text-muted">Nenhum medicamento encontrado com estes critérios.</p>`;
+                return;
+            }
+
+            resultados.forEach(med => {
+                const card = criarCardResultado(med, usuarioLogado);
+                container.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error("Erro ao buscar medicamentos:", error);
+            container.innerHTML = `<p class="text-center text-danger">Ocorreu um erro ao realizar a busca.</p>`;
+        }
+    });
+</script>
+
+</body>
+</html>
