@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/ReadMedicamentoServlet")
 public class ReadMedicamentoServlet extends HttpServlet {
@@ -22,10 +22,11 @@ public class ReadMedicamentoServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         MedicamentoDAO dao = MedicamentoDAO.getInstance();
-        ArrayList<Medicamento> lista = dao.getMedicamentos();
+        List<Medicamento> lista = dao.getMedicamentos();
 
         String json = new Gson().toJson(lista);
         response.getWriter().write(json);
+
     }
 
     
