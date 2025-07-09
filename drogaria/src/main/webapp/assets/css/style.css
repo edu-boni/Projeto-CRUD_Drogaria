@@ -106,3 +106,8 @@ body {
 .comentario-item {
     margin-bottom: 1rem;
 }
+
+#categoria-busca-dropdown {
+   max-height: 200px;
+   overflow-y: auto;
+}

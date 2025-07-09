@@ -210,7 +210,7 @@ fetch('/drogaria/include/footer.html')
 	           <i class="fas fa-pills mr-1"></i> Medicamentos
 	         </a>
 	         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownRemedio">
-	           <a class="dropdown-item" href="/drogaria/medicamento/form-medicamento.html">Adicionar novo remédio</a>
+	           <a class="dropdown-item" href="/drogaria/medicamento/form-medicamento.html">Adicionar novo medicamento</a>
 	           <div class="dropdown-divider"></div>
 	           <a class="dropdown-item" href="/drogaria/medicamento/lista-medicamentos.html">Ver todos</a>
 	         </div>

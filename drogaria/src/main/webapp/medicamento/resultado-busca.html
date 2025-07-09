@@ -14,7 +14,7 @@
 <div id="header-placeholder"></div>
 
 <main class="container mt-5" style="min-height: 80vh">
-    <h2 class="mb-4" id="titulo-busca"></h2>
+    <h3 class="mb-4 text-center" id="titulo-busca"></h3>
     <div id="resultados-container"></div>
 </main>
 
@@ -95,7 +95,26 @@
     }
 
     document.addEventListener("footer-carregado", async () => {
+        const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
+        const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
+    	
         const container = document.getElementById('resultados-container');
+        
+        if (!usuarioLogado) {
+            container.innerHTML = '';
+            container.classList.add('d-flex', 'align-items-center', 'justify-content-center');
+            container.style.minHeight = '80vh';
+            const divMsg = document.createElement('div');
+            divMsg.className = 'text-center';
+            divMsg.innerHTML = `
+                <h2 class="txt-cyan">Faça login para ver o conteúdo dessa página</h2>
+            `;
+            container.appendChild(divMsg);
+
+            return;
+        }
+
+        
         const titulo = document.getElementById('titulo-busca');
         container.innerHTML = '<p class="text-center">Buscando...</p>';
 
@@ -114,15 +133,19 @@
         const termoBusca = params.get('search');
         const categoriaValor = params.get('categoria');
         
-        let tituloHtml = `Resultados para: <strong>"${termoBusca || 'Tudo'}"</strong>`;
+        let tituloHtml = '';
+        
+        if(!termoBusca){
+            tituloHtml = `Todos os medicamentos`;
+        }else{
+            tituloHtml = `Resultados para <strong>"${termoBusca || 'Tudo'}"</strong>`;
+        }
+        
         if (categoriaValor && categoriaValor.toUpperCase() !== 'TODOS') {
             const categoriaTexto = categoriasMap[categoriaValor] || categoriaValor;
             tituloHtml += ` em <strong>${categoriaTexto}</strong>`;
         }
         titulo.innerHTML = tituloHtml;
-        
-        const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
-        const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
         
         try {
             const response = await fetch(`/drogaria/buscar-medicamento?search=${termoBusca || ''}&categoria=${categoriaValor || 'TODOS'}`);

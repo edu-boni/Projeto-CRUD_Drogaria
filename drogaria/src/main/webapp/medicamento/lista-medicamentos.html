@@ -203,7 +203,7 @@
 
             <div class="col-md-6 mb-3">
               <label for="desconto-${med.id}" class="form-label">Desconto (%)</label>
-              <input type="number" step="0.01" class="form-control" id="desconto-${med.id}" name="desconto" value="${med.desconto || ''}" placeholder="Ex: 15 para 15%">
+              <input type="number" step="0.01" class="form-control" id="desconto-${med.id}" name="desconto" value="${med.desconto || ''}"  min='0' max='100'>
             </div>
             
             <div class="col-md-6 mb-3">
@@ -243,7 +243,13 @@
     const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
     const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
     const isAdmin = usuarioLogado && usuarioLogado.isAdmin;
-
+	
+    if(!usuarioLogado){
+        let msg = '<div class="col-md-12 row d-flex"><h2 class="txt-cyan text-center col-md-12 col-sm-12">Faça login para ver o conteúdo dessa página</h2>';
+        container.innerHTML = msg + '</div>';
+		return;
+    }
+    
     try {
       const response = await fetch('/drogaria/ReadMedicamentoServlet', {
         method: 'GET',
