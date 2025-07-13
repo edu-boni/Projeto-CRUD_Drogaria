@@ -111,3 +111,8 @@ body {
    max-height: 200px;
    overflow-y: auto;
 }
+
+a.card-link, a.card-link:hover {
+  color: inherit; /* Herda a cor do texto do pai */
+  text-decoration: none; /* Remove o sublinhado */
+}

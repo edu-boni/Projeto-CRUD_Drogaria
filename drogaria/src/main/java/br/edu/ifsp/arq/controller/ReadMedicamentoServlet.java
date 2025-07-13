@@ -22,9 +22,23 @@ public class ReadMedicamentoServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         MedicamentoDAO dao = MedicamentoDAO.getInstance();
-        ArrayList<Medicamento> lista = dao.getMedicamentos();
+        String idParam = request.getParameter("id");
+        Object resultado; // Pode ser um único Medicamento ou uma Lista
 
-        String json = new Gson().toJson(lista);
+        if (idParam != null && !idParam.isEmpty()) {
+            // Se um ID foi passado na URL, busca apenas UM medicamento
+            try {
+                int id = Integer.parseInt(idParam);
+                resultado = dao.getMedicamentoPorId(id);
+            } catch (NumberFormatException e) {
+                resultado = null; // ID inválido
+            }
+        } else {
+            // Se nenhum ID foi passado, retorna a lista completa (comportamento antigo)
+            resultado = dao.getMedicamentos();
+        }
+
+        String json = new Gson().toJson(resultado);
         response.getWriter().write(json);
     }
 

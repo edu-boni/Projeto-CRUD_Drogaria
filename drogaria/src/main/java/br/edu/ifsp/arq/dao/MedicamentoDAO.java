@@ -7,7 +7,7 @@ import br.edu.ifsp.arq.model.Comentario;
 import br.edu.ifsp.arq.model.Medicamento;
 
 public class MedicamentoDAO {
-	private static MedicamentoDAO instance;
+	private static MedicamentoDAO instance = new MedicamentoDAO();
 	private ArrayList<Medicamento> listaDeMedicamentos;
 	
 	private MedicamentoDAO() {
@@ -15,9 +15,6 @@ public class MedicamentoDAO {
 	}
 	
 	public static MedicamentoDAO getInstance() {
-		if(instance==null) {
-			instance = new MedicamentoDAO();
-		}
 		return instance;
 	}
 	
@@ -114,5 +111,18 @@ public class MedicamentoDAO {
         }
         return false;
     }
+	
+
+	public boolean removerComentario(int medicamentoId, int comentarioIndex) {
+	    Medicamento medicamento = getMedicamentoPorId(medicamentoId);
+	    if (medicamento != null) {
+	        // Verifica se o índice do comentário é válido
+	        if (comentarioIndex >= 0 && comentarioIndex < medicamento.getComentarios().size()) {
+	            medicamento.getComentarios().remove(comentarioIndex);
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 
 }

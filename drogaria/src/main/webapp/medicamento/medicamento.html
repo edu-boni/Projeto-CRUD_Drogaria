@@ -1,10 +1,205 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="utf-8">
+    <title>Medicamento - Farmácia Bem-estar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="/drogaria/assets/css/style.css">
+	<link rel="icon" type="image/x-icon" href="/drogaria/assets/images/favicon.ico">
 </head>
 <body>
 
+<div id="header-placeholder"></div>
+
+<main class="container mt-4 mb-5" style="min-height: 80vh">
+    <div class="mb-3">
+        <a href="javascript:history.back()" class="text-secondary"><i class="fas fa-arrow-left"></i> Voltar</a>
+    </div>
+    <div id="detalhe-container">
+        <p class="text-center">Carregando detalhes do medicamento...</p>
+    </div>
+</main>
+
+<div id="modais-container"></div>
+
+<div id="footer-placeholder"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/drogaria/assets/js/header_footer_include.js"></script>
+<script src="/drogaria/assets/js/sweet_alerts.js"></script>
+<script src="/drogaria/assets/js/medicamento.js"></script>
+<script>
+    
+    function renderizarPagina(med, usuarioLogado, categoriasMap) {
+        const container = document.getElementById('detalhe-container');
+        document.title = `${med.nome} - Farmácia Bem-estar`;
+
+        const imgUrl = med.imagem_url ? med.imagem_url.trim() : "/drogaria/assets/images/semimagem.png";
+        
+        let editButtonHtml = '';
+        if (usuarioLogado && usuarioLogado.isAdmin) {
+            editButtonHtml = `<a href="#" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-${med.id}"><i class="fas fa-pencil-alt"></i> Editar</a>`;
+        }
+
+        let precoHtml = '';
+        const descontoProduto = med.desconto || 0;
+        if (usuarioLogado && descontoProduto > 0) {
+            const precoFinal = med.preco * (1 - (descontoProduto / 100));
+            precoHtml = `<h4 class="mb-0"><strong>${formatarPreco(precoFinal)}</strong> <span class="badge badge-danger">-${descontoProduto.toFixed(0)}%</span></h4>
+                         <p class="text-secondary mb-0"><small>De: ${formatarPreco(med.preco)}</small></p>`;
+        } else {
+            precoHtml = `<h4>${formatarPreco(med.preco)}</h4>`;
+        }
+        
+        const categoriaTexto = categoriasMap[med.categoria] || med.categoria;
+        const validadeFormatada = med.validade ? med.validade.split('-').reverse().join('/') : 'N/A';
+
+        let comentariosHtml = '<p class="text-muted">Nenhum comentário ainda.</p>';
+        if (med.comentarios && med.comentarios.length > 0) {
+            const comentariosOrdenados = [...med.comentarios].reverse();
+            comentariosHtml = comentariosOrdenados.map((c, index) => `
+                <div class="comentario-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${c.usuarioNome}</strong>
+                            <small class="text-muted">em ${c.data}</small>
+                        </div>
+                        ${usuarioLogado && usuarioLogado.isAdmin ? `<button class="btn btn-sm btn-outline-danger btn-excluir-comentario" data-medicamento-id="${med.id}" data-comentario-index="${index}"><i class="fas fa-trash-alt"></i></button>` : ''}
+                    </div>
+                    <p class="mb-0 mt-1 bg-light p-2 rounded">${c.texto}</p>
+                </div>
+            `).join('<hr class="my-2">');
+        }
+
+        let formComentarioHtml = '';
+        if (usuarioLogado && !usuarioLogado.isAdmin) {
+             formComentarioHtml = `<form class="form-comentario" data-medicamento-id="${med.id}"><div class="form-comentario-wrapper mt-3"><input type="hidden" name="avaliacao" value="5"><input type="text" name="texto" class="form-comentario-input" placeholder="Escreva seu comentário aqui..." required><button type="submit" class="form-comentario-btn"><i class="fas fa-paper-plane"></i></button></div></form>`;
+        } else if (usuarioLogado && usuarioLogado.isAdmin) {
+            formComentarioHtml = '<p class="text-info mt-4"><i class="fas fa-info-circle"></i> Administradores não podem adicionar comentários.</p>';
+        } else {
+            formComentarioHtml = '<p class="mt-4">Para deixar um comentário, <a href="/drogaria/public/login.html">faça o login</a>.</p>';
+        }
+        
+        container.innerHTML = `
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <img src="${imgUrl}" alt="${med.nome}" class="img-fluid rounded border p-2">
+                </div>
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h2 class="mb-2">${med.nome}</h2>
+                        ${editButtonHtml}
+                    </div>
+                    <div class="mb-3">${precoHtml}</div>
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Princípio Ativo:</strong><br>
+                            <span>${med.principio_ativo}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Fabricante:</strong><br>
+                            <span>${med.fabricante}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Forma:</strong><br>
+                            <span>${med.forma}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Dosagem:</strong><br>
+                            <span>${med.dosagem}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Lote:</strong><br>
+                            <span>${med.lote}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Validade:</strong><br>
+                            <span>${validadeFormatada}</span>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <strong>Categoria:</strong><br>
+                            <span class="badge badge-secondary">${categoriaTexto}</span>
+                        </div>
+                        <div class="col-12">
+                            <strong>Indicação:</strong><br>
+                            <span>${med.indicacao}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4"><div class="col-12">
+                <hr>
+                <h3 class="mt-4">Comentários</h3>
+                <div class="card"><div class="card-body">
+                    <div class="lista-comentarios">${comentariosHtml}</div>
+                    ${formComentarioHtml}
+                </div></div>
+            </div></div>`;
+    }
+    
+    let listaDeCategorias = [];
+    
+    document.addEventListener("footer-carregado", function () {
+        const container = document.getElementById('detalhe-container');
+        const modaisContainer = document.getElementById('modais-container');
+        const params = new URLSearchParams(window.location.search);
+        const medicamentoId = params.get('id');
+
+        if (!medicamentoId) {
+            container.innerHTML = '<h2 class="text-center text-danger">ID do medicamento não fornecido.</h2>';
+            return;
+        }
+
+        const categoriasMap = {}; 
+
+        fetch('/drogaria/CategoriaServlet')
+            .then(response => {
+                if (!response.ok) throw new Error('Falha ao buscar categorias');
+                return response.json();
+            })
+            .then(categorias => {
+                listaDeCategorias = categorias;
+                categorias.forEach(cat => {
+                    categoriasMap[cat.value] = cat.text;
+                });
+                return fetch(`/drogaria/ReadMedicamentoServlet?id=${medicamentoId}`);
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Medicamento não encontrado.');
+                return response.json();
+            })
+            .then(med => {
+                if (!med) { throw new Error('Medicamento não encontrado.'); }
+                
+                const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
+                const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
+                
+                renderizarPagina(med, usuarioLogado, categoriasMap);
+
+                if (usuarioLogado && usuarioLogado.isAdmin) {
+                    if(typeof criarModalMedicamento === 'function') {
+                        modaisContainer.appendChild(criarModalMedicamento(med));
+                    }
+                    if(typeof configurarBotoesExcluirMedicamento === 'function') {
+                        configurarBotoesExcluirMedicamento();
+                    }
+                }
+                
+                if (typeof configurarBotoesExcluirComentario === 'function') {
+                    configurarBotoesExcluirComentario();
+                }
+            })
+            .catch(error => {
+                console.error("Erro ao buscar detalhes:", error);
+                container.innerHTML = `<h2 class="text-center text-danger">${error.message}</h2>`;
+            });
+    });   
+</script>
 </body>
 </html>

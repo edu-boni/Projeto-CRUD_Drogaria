@@ -25,96 +25,10 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/drogaria/assets/js/sweet_alerts.js"></script>
 <script src="/drogaria/assets/js/exibe_mensagem.js"></script>
-
+<script src="/drogaria/assets/js/medicamento.js"></script>
 <script>
-    function formatarPreco(valor) {
-        return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
-    
-    function criarCardResultado(med, usuarioLogado) {
-        const cardWrapper = document.createElement('div');
-        cardWrapper.className = 'col-md-12 mb-4';
-        
-        const imgUrl = med.imagem_url?.trim() || "/drogaria/assets/images/semimagem.png";
-
-        let precoHtml = '';
-        if (usuarioLogado) {
-            const descontoProduto = med.desconto || 0;
-            if (descontoProduto > 0) {
-                const precoFinal = med.preco * (1 - (descontoProduto / 100));
-                precoHtml = `<p class="card-text mb-0"><strong>Preço:</strong> <span class="text-secondary" style="text-decoration: line-through;">${formatarPreco(med.preco)}</span> <strong class="ml-2">${formatarPreco(precoFinal)}</strong> <span class="badge badge-danger ml-2"><i class="fas fa-tag"></i> -${descontoProduto.toFixed(0)}%</span></p>`;
-            } else {
-                precoHtml = `<p class="card-text mb-0"><strong>Preço:</strong> ${formatarPreco(med.preco)}</p>`;
-            }
-        } else {
-            precoHtml = `<p class="card-text mb-0"><strong>Preço:</strong> ${formatarPreco(med.preco)}</p>`;
-        }
-        
-        let comentariosHtml = '';
-        if (med.comentarios && med.comentarios.length > 0) {
-            const comentariosOrdenados = [...med.comentarios].sort((a, b) => new Date(b.data.split(' ')[0].split('/').reverse().join('-')) - new Date(a.data.split(' ')[0].split('/').reverse().join('-')));
-            comentariosHtml = comentariosOrdenados.map(c => `
-                <div class="comentario-item mt-2">
-                    <strong>${c.usuarioNome}</strong> <small class="text-muted">em ${c.data}</small>
-                    <p class="mb-0 bg-light p-2 rounded">${c.texto}</p>
-                </div>
-            `).join('<hr class="my-2">');
-        }
-
-        let formComentarioHtml = '';
-        if (usuarioLogado && !usuarioLogado.isAdmin) {
-             formComentarioHtml = `
-                <div class="form-comentario-wrapper mt-3">
-                    <form class="form-comentario" data-medicamento-id="${med.id}">
-                        <input type="hidden" name="avaliacao" value="5">
-                        <input type="text" name="texto" class="form-comentario-input" placeholder="Adicione um comentário..." required>
-                        <button type="submit" class="form-comentario-btn"><i class="fas fa-paper-plane"></i></button>
-                    </form>
-                </div>`;
-        }
-        
-        cardWrapper.innerHTML = `
-            <div class="card-resultado-busca">
-                <div class="row">
-                    <div class="col-md-auto text-center" style="flex: 0 0 120px;">
-                        <img src="${imgUrl}" alt="${med.nome}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 6px;" onerror="this.onerror=null;this.src='/drogaria/assets/images/semimagem.png';">
-                    </div>
-                    <div class="col-md">
-                        <h5 class="card-title mb-1">${med.nome}</h5>
-                        <p class="card-text mb-1"><small><strong>Princípio Ativo:</strong> ${med.principio_ativo}</small></p>
-                        <p class="card-text mb-1"><small><strong>Fabricante:</strong> ${med.fabricante}</small></p>
-                        ${precoHtml}
-                    </div>
-                </div>
-                <div class="comentarios-section">
-                    ${comentariosHtml}
-                    ${formComentarioHtml}
-                </div>
-            </div>`;
-        return cardWrapper;
-    }
-
     document.addEventListener("footer-carregado", async () => {
-        const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
-        const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
-    	
         const container = document.getElementById('resultados-container');
-        
-        if (!usuarioLogado) {
-            container.innerHTML = '';
-            container.classList.add('d-flex', 'align-items-center', 'justify-content-center');
-            container.style.minHeight = '80vh';
-            const divMsg = document.createElement('div');
-            divMsg.className = 'text-center';
-            divMsg.innerHTML = `
-                <h2 class="txt-cyan">Faça login para ver o conteúdo dessa página</h2>
-            `;
-            container.appendChild(divMsg);
-
-            return;
-        }
-
-        
         const titulo = document.getElementById('titulo-busca');
         container.innerHTML = '<p class="text-center">Buscando...</p>';
 
@@ -133,24 +47,19 @@
         const termoBusca = params.get('search');
         const categoriaValor = params.get('categoria');
         
-        let tituloHtml = '';
-        
-        if(!termoBusca){
-            tituloHtml = `Todos os medicamentos`;
-        }else{
-            tituloHtml = `Resultados para <strong>"${termoBusca || 'Tudo'}"</strong>`;
-        }
-        
+        let tituloHtml = `Resultados para: <strong>"${termoBusca || 'Tudo'}"</strong>`;
         if (categoriaValor && categoriaValor.toUpperCase() !== 'TODOS') {
             const categoriaTexto = categoriasMap[categoriaValor] || categoriaValor;
             tituloHtml += ` em <strong>${categoriaTexto}</strong>`;
         }
         titulo.innerHTML = tituloHtml;
         
+        const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
+        const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
+        
         try {
             const response = await fetch(`/drogaria/buscar-medicamento?search=${termoBusca || ''}&categoria=${categoriaValor || 'TODOS'}`);
             const resultados = await response.json();
-
             container.innerHTML = ''; 
 
             if (!resultados || resultados.length === 0) {
@@ -159,6 +68,7 @@
             }
 
             resultados.forEach(med => {
+                // Chama a função GLOBAL 'criarCardResultado' do arquivo medicamento.js
                 const card = criarCardResultado(med, usuarioLogado);
                 container.appendChild(card);
             });
@@ -169,6 +79,5 @@
         }
     });
 </script>
-
 </body>
 </html>

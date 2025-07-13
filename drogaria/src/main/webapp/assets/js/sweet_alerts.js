@@ -47,3 +47,50 @@ function configurarBotoesExcluirMedicamento() {
   });
 }
 
+function configurarBotoesExcluirComentario() {
+  document.querySelectorAll(".btn-excluir-comentario").forEach(btn => {
+    // Adiciona um listener de clique para cada botão de excluir
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      
+      const medicamentoId = this.dataset.medicamentoId;
+      const comentarioIndex = this.dataset.comentarioIndex;
+
+      Swal.fire({
+        title: 'Deseja realmente excluir este comentário?',
+        text: "Essa ação não poderá ser desfeita!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc143c",
+        cancelButtonColor: "#a9a9a9",
+        confirmButtonText: "Excluir",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formData = new URLSearchParams();
+          formData.append('medicamentoId', medicamentoId);
+          formData.append('comentarioIndex', comentarioIndex);
+
+          fetch('/drogaria/delete-comentario', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json().then(data => ({ok: response.ok, data: data})))
+          .then(({ok, data}) => {
+              if (ok) {
+                  Swal.fire('Excluído!', data.message, 'success');
+                  const comentarioItem = this.closest('.comentario-item');
+                  const hrSeparador = comentarioItem.nextElementSibling; // Pega o <hr> depois do comentário
+                  if(hrSeparador && hrSeparador.tagName === 'HR') {
+                      hrSeparador.remove();
+                  }
+                  comentarioItem.remove();
+              } else {
+                  Swal.fire('Erro!', data.message, 'error');
+              }
+          }).catch(err => Swal.fire('Erro de Conexão!', 'Não foi possível excluir o comentário.', 'error'));
+        }
+      });
+    });
+  });
+}

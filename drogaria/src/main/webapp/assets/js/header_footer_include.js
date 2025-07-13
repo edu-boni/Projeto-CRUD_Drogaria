@@ -89,51 +89,55 @@ document.body.addEventListener('submit', function(e) {
     if (e.target.classList.contains('form-comentario')) {
         e.preventDefault();
         const form = e.target;
-        const medicamentoId = form.dataset.medicamentoId;
-        const formData = new FormData(form);
-        formData.append('medicamentoId', medicamentoId);
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
 
-        const textoComentario = form.querySelector('input[name="texto"]').value;
+        const formData = new URLSearchParams(new FormData(form));
+        formData.append('medicamentoId', form.dataset.medicamentoId);
 
-        form.querySelector('button').disabled = true;
-
-        fetch('/drogaria/adicionar-comentario', {
-            method: 'POST',
-            body: new URLSearchParams(formData)
-        })
+        fetch('/drogaria/adicionar-comentario', { method: 'POST', body: formData })
         .then(response => response.json().then(data => ({ ok: response.ok, data: data })))
         .then(({ ok, data }) => {
             if (ok) {
-                // Se deu certo, não recarregamos a página.
-                // Em vez disso, adicionamos o novo comentário dinamicamente.
+                // --- LÓGICA DE ATUALIZAÇÃO CORRIGIDA ---
+                const containerComentarios = form.closest('.card-body') || form.closest('.comentarios-section');
 
-                const secaoComentarios = form.closest('.comentarios-section');
-                if (secaoComentarios) {
-                    const novoComentario = data.comentario;
-                    const novoComentarioDiv = document.createElement('div');
-                    novoComentarioDiv.className = 'comentario-item mt-2';
-                    novoComentarioDiv.innerHTML = `
-                        <strong>${novoComentario.usuarioNome}</strong> <small class="text-muted">em ${novoComentario.data}</small>
-                        <p class="mb-0 bg-light p-2 rounded">${novoComentario.texto}</p>
-                    `;
-                    
-                    secaoComentarios.prepend(document.createElement('hr'));
-                    secaoComentarios.prepend(novoComentarioDiv);
+                if (containerComentarios) {
+                    const listaComentarios = containerComentarios.querySelector('.lista-comentarios');
+                    if (listaComentarios) {
+                        const novoComentario = data.comentario;
+                        
+                        // Cria o HTML do novo comentário
+                        const comentarioDiv = document.createElement('div');
+                        comentarioDiv.className = 'comentario-item';
+                        comentarioDiv.innerHTML = `<p><strong>${novoComentario.usuarioNome}</strong> <small class="text-muted">em ${novoComentario.data}</small></p><p class="mb-0 bg-light p-2 rounded">${novoComentario.texto}</p>`;
+                        
+                        // Cria o separador <hr>
+                        const hr = document.createElement('hr');
+                        hr.className = 'my-2';
+
+                        // Procura pela mensagem "Nenhum comentário"
+                        const pSemComentarios = listaComentarios.querySelector('p.text-muted');
+                        if (pSemComentarios) {
+                            // Se encontrar, remove apenas a mensagem
+                            pSemComentarios.remove();
+                        }
+
+                        // Adiciona o novo comentário e o separador no topo da lista
+                        listaComentarios.prepend(comentarioDiv);
+                        if (listaComentarios.children.length > 1) {
+                            // Adiciona um <hr> acima do segundo comentário em diante
+                            comentarioDiv.after(hr);
+                        }
+                    }
                 }
-
-                form.reset(); 
-                
+                form.reset();
             } else {
                 Swal.fire('Erro!', data.message || 'Ocorreu um erro.', 'error');
             }
         })
-        .catch(err => {
-            console.error("Erro ao enviar comentário:", err);
-            Swal.fire('Erro de Conexão', 'Não foi possível enviar seu comentário.', 'error');
-        })
-        .finally(() => {
-            form.querySelector('button').disabled = false;
-        });
+        .catch(err => Swal.fire('Erro de Conexão', 'Não foi possível enviar seu comentário.', 'error'))
+        .finally(() => { submitButton.disabled = false; });
     }
 });
 
