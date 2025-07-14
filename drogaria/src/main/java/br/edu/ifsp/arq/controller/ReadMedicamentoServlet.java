@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/ReadMedicamentoServlet")
 public class ReadMedicamentoServlet extends HttpServlet {
@@ -23,28 +23,30 @@ public class ReadMedicamentoServlet extends HttpServlet {
 
         MedicamentoDAO dao = MedicamentoDAO.getInstance();
         String idParam = request.getParameter("id");
-        Object resultado; // Pode ser um único Medicamento ou uma Lista
+
+        Object resultado;
 
         if (idParam != null && !idParam.isEmpty()) {
-            // Se um ID foi passado na URL, busca apenas UM medicamento
             try {
                 int id = Integer.parseInt(idParam);
-                resultado = dao.getMedicamentoPorId(id);
+                Medicamento medicamento = dao.getMedicamentoPorId(id);
+                resultado = medicamento != null ? medicamento : new Object();
             } catch (NumberFormatException e) {
-                resultado = null; // ID inválido
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"erro\":\"ID inválido\"}");
+                return;
             }
         } else {
-            // Se nenhum ID foi passado, retorna a lista completa (comportamento antigo)
-            resultado = dao.getMedicamentos();
+            List<Medicamento> lista = dao.getMedicamentos();
+            resultado = lista;
         }
 
         String json = new Gson().toJson(resultado);
         response.getWriter().write(json);
     }
 
-    
     @Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doGet(req, resp);
-	}
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
 }

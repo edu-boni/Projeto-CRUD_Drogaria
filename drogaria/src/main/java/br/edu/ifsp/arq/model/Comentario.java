@@ -6,34 +6,33 @@ import java.time.format.DateTimeFormatter;
 
 public class Comentario implements Serializable {
     private static final long serialVersionUID = 1L;
-
+    
+    private int id;
     private String usuarioNome;
     private String texto;
-    private int avaliacao; 
     private String data;
 
-    public Comentario(String usuarioNome, String texto, int avaliacao) {
+    public Comentario() {}
+
+    public Comentario(String usuarioNome, String texto) {
         this.usuarioNome = usuarioNome;
         this.texto = texto;
-        this.avaliacao = avaliacao;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
+        this.data = LocalDateTime.now().format(formatter);
+    }
+    
+    public Comentario(int id, String usuarioNome, String texto) {
+        this.id = id;
+        this.usuarioNome = usuarioNome;
+        this.texto = texto;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
         this.data = LocalDateTime.now().format(formatter);
     }
 
-    public String getUsuarioNome() { 
-    	return usuarioNome; 
-	}
-    
-    public String getTexto() { 
-    	return texto; 
-	}
-    
-    public int getAvaliacao() { 
-    	return avaliacao; 
-	}
-    
-    public String getData() { 
-    	return data; 
-	}
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
+    public String getUsuarioNome() { return usuarioNome; }
+    public String getTexto() { return texto; }
+    public String getData() { return data; }
 }

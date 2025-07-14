@@ -54,7 +54,7 @@ function configurarBotoesExcluirComentario() {
       e.preventDefault();
       
       const medicamentoId = this.dataset.medicamentoId;
-      const comentarioIndex = this.dataset.comentarioIndex;
+	  const comentarioId = this.dataset.comentarioId;
 
       Swal.fire({
         title: 'Deseja realmente excluir este comentário?',
@@ -69,7 +69,7 @@ function configurarBotoesExcluirComentario() {
         if (result.isConfirmed) {
           const formData = new URLSearchParams();
           formData.append('medicamentoId', medicamentoId);
-          formData.append('comentarioIndex', comentarioIndex);
+		  formData.append('comentarioId', comentarioId);
 
           fetch('/drogaria/delete-comentario', {
               method: 'POST',

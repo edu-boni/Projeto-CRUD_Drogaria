@@ -18,7 +18,6 @@ public class AdicionarComentarioServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        // Usaremos um Map mais flexível para a resposta
         Map<String, Object> result = new HashMap<>();
 
         HttpSession session = request.getSession(false);
@@ -40,24 +39,21 @@ public class AdicionarComentarioServlet extends HttpServlet {
 
         try {
             int medicamentoId = Integer.parseInt(request.getParameter("medicamentoId"));
-            int avaliacao = Integer.parseInt(request.getParameter("avaliacao"));
             String texto = request.getParameter("texto");
             
-            if (texto == null || texto.trim().isEmpty() || avaliacao < 1 || avaliacao > 5) {
+            if (texto == null || texto.trim().isEmpty()) {
                  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                 result.put("message", "Avaliação e texto são obrigatórios.");
+                 result.put("message", "É necessário escrever algo.");
                  response.getWriter().write(new Gson().toJson(result));
                  return;
             }
 
-            Comentario novoComentario = new Comentario(usuario.getNome(), texto, avaliacao);
+            Comentario novoComentario = new Comentario(usuario.getNome(), texto);
             boolean sucesso = MedicamentoDAO.getInstance().adicionarComentario(medicamentoId, novoComentario);
 
             if (sucesso) {
                 response.setStatus(HttpServletResponse.SC_OK);
                 result.put("message", "Comentário adicionado com sucesso!");
-                // --- MUDANÇA PRINCIPAL AQUI ---
-                // Adiciona o objeto do novo comentário na resposta JSON
                 result.put("comentario", novoComentario);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);

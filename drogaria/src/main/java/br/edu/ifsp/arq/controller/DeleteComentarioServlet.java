@@ -31,9 +31,9 @@ public class DeleteComentarioServlet extends HttpServlet {
 
         try {
             int medicamentoId = Integer.parseInt(request.getParameter("medicamentoId"));
-            int comentarioIndex = Integer.parseInt(request.getParameter("comentarioIndex"));
-            
-            boolean sucesso = MedicamentoDAO.getInstance().removerComentario(medicamentoId, comentarioIndex);
+            int comentarioId = Integer.parseInt(request.getParameter("comentarioId"));
+
+            boolean sucesso = MedicamentoDAO.getInstance().removerComentario(medicamentoId, comentarioId);
 
             if (sucesso) {
                 result.put("message", "Comentário excluído com sucesso!");
@@ -46,7 +46,7 @@ public class DeleteComentarioServlet extends HttpServlet {
             result.put("message", "Erro ao processar a solicitação.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-        
+
         response.getWriter().write(new Gson().toJson(result));
     }
 }

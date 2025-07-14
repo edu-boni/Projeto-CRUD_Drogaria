@@ -62,18 +62,18 @@
         let comentariosHtml = '<p class="text-muted">Nenhum comentário ainda.</p>';
         if (med.comentarios && med.comentarios.length > 0) {
             const comentariosOrdenados = [...med.comentarios].reverse();
-            comentariosHtml = comentariosOrdenados.map((c, index) => `
-                <div class="comentario-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>${c.usuarioNome}</strong>
-                            <small class="text-muted">em ${c.data}</small>
-                        </div>
-                        ${usuarioLogado && usuarioLogado.isAdmin ? `<button class="btn btn-sm btn-danger btn-excluir-comentario" data-medicamento-id="${med.id}" data-comentario-index="${index}"><i class="fas fa-trash-alt"></i></button>` : ''}
-                    </div>
-                    <p class="mb-0 mt-1 bg-light p-2 rounded">${c.texto}</p>
-                </div>
-            `).join('<hr class="my-2">');
+            comentariosHtml = comentariosOrdenados.map((c) => `
+	            <div class="comentario-item">
+	              <div class="d-flex justify-content-between align-items-center">
+	                <div>
+	                  <strong>${c.usuarioNome}</strong>
+	                  <small class="text-muted">em ${c.data}</small>
+	                </div>
+	                ${usuarioLogado && usuarioLogado.isAdmin ? `<button class="btn btn-sm btn-danger btn-excluir-comentario" data-medicamento-id="${med.id}" data-comentario-id="${c.id}"><i class="fas fa-trash-alt"></i></button>` : ''}
+	              </div>
+	              <p class="mb-0 mt-1 bg-light p-2 rounded">${c.texto}</p>
+	            </div>
+	          `).join('<hr class="my-2">');
         }
 
         let formComentarioHtml = '';
