@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport"content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<link rel="stylesheet" href="/drogaria/assets/css/style.css">
 	<title>Farmácia Bem-estar</title>
@@ -12,8 +12,8 @@
 <body>
 <div id="header-placeholder"></div>
 	
-<div id="lista-medicamentos" class="container mt-5" style="min-height: 80vh"></div>
-<div id="modais-container"></div>
+	<div id="lista-medicamentos" class="container mt-5 justify-content-center d-flex flex-column align-items-center" style="min-height: 80vh"></div>
+	<div id="modais-container"></div>
 	
 <div id="footer-placeholder"></div>
 
@@ -23,56 +23,249 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/drogaria/assets/js/sweet_alerts.js"></script>
 <script src="/drogaria/assets/js/exibe_mensagem.js"></script>
-<script src="/drogaria/assets/js/medicamento.js"></script>
+
 <script>
-    let listaDeCategorias = []; // Necessário para o modal de edição, que ainda pode ser usado
+  let listaDeCategorias = [];
 
-    document.addEventListener('footer-carregado', async () => {
-        const container = document.getElementById('lista-medicamentos');
-        container.innerHTML = '<h2>Carregando...</h2>';
-        
-        const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
-        const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
+  // Formata preço em moeda BRL
+  function formatarPreco(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
 
-        if (!usuarioLogado || !usuarioLogado.isAdmin) {
-            container.innerHTML = '<h2>Acesso Negado.</h2>';
-            return;
-        }
+  // Cria um card de medicamento, incluindo botão "Editar"
+	function criarCardMedicamento(med, usuarioLogado) {
+	  const divCard = document.createElement('div');
+	  divCard.className = 'col-md-3 col-sm-12 mb-4 d-flex flex-column align-items-center hover-card';
+	
+	  // Cria o link clicável
+	  const link = document.createElement('a');
+	  link.href = `/drogaria/medicamento/medicamento.html?id=${med.id}`;
+	  link.className = 'w-100 text-decoration-none text-reset';
+	
+	  // Conteúdo dentro do link
+	  const divInterno = document.createElement('div');
+	  divInterno.className = 'd-flex flex-column align-items-center';
+	
+	  // Imagem
+	  const img = document.createElement('img');
+	  img.className = 'img-fluid mb-4';
+	  img.style.maxHeight = '120px';
+	  img.alt = med.nome;
+	  img.src = med.imagem_url || '/drogaria/assets/images/semimagem.png';
+	  img.onerror = function () {
+	    this.src = '/drogaria/assets/images/semimagem.png';
+	  };
+	
+	  // Informações
+	  const divInfo = document.createElement('div');
+	  divInfo.className = 'p-3 w-100 bg-cyan-light';
+	  divInfo.style.borderRadius = '6px';
+	
+	  const nomeP = document.createElement('p');
+	  nomeP.className = 'txt-cyan';
+	  nomeP.style.fontSize = '20px';
+	  nomeP.style.fontWeight = 'bold';
+	  nomeP.style.margin = '0';
+	  nomeP.textContent = med.nome;
+	
+	  const dosagemP = document.createElement('p');
+	  dosagemP.className = 'txt-cyan';
+	  dosagemP.style.margin = '0';
+	  dosagemP.textContent = med.dosagem;
+	
+	  divInfo.appendChild(nomeP);
+	  divInfo.appendChild(dosagemP);
+	
+	  // Preço
+	  const descontoProduto = med.desconto || 0;
+	
+	  if (descontoProduto > 0) {
+	    const precoOriginal = document.createElement('p');
+	    precoOriginal.className = 'mt-1 mb-0 text-secondary';
+	    precoOriginal.style.fontSize = '15px';
+	    precoOriginal.style.textDecoration = 'line-through';
+	    precoOriginal.textContent = formatarPreco(med.preco);
+	    divInfo.appendChild(precoOriginal);
+	
+	    const precoComDescontoDiv = document.createElement('div');
+	    precoComDescontoDiv.className = 'd-flex justify-content-between align-items-center';
+	    precoComDescontoDiv.style.fontSize = '20px';
+	    precoComDescontoDiv.style.fontWeight = 'bold';
+	
+	    const precoFinal = med.preco * (1 - descontoProduto / 100);
+	    const precoComDesconto = document.createElement('p');
+	    precoComDesconto.className = 'mb-0';
+	    precoComDesconto.textContent = formatarPreco(precoFinal);
+	
+	    const tagDesconto = document.createElement('p');
+	    tagDesconto.className = 'text-danger mb-0';
+	    tagDesconto.innerHTML = `<i class="fas fa-solid fa-tag"></i> -${descontoProduto.toFixed(0)}%`;
+	
+	    precoComDescontoDiv.appendChild(precoComDesconto);
+	    precoComDescontoDiv.appendChild(tagDesconto);
+	    divInfo.appendChild(precoComDescontoDiv);
+	  } else {
+	    const precoP = document.createElement('p');
+	    precoP.className = 'mt-1 mb-0';
+	    precoP.style.fontSize = '20px';
+	    precoP.style.fontWeight = 'bold';
+	    precoP.textContent = formatarPreco(med.preco);
+	    divInfo.appendChild(precoP);
+	  }
+	
+	  // Monta conteúdo dentro do link
+	  divInterno.appendChild(img);
+	  divInterno.appendChild(divInfo);
+	  link.appendChild(divInterno);
+	
+	  // Adiciona o link ao card
+	  divCard.appendChild(link);
+	
+	  return divCard;
+	}
 
-        try {
-            const response = await fetch('/drogaria/ReadMedicamentoServlet');
-            if (!response.ok) throw new Error('Erro ao carregar medicamentos.');
-            const listaMedicamentos = await response.json();
-            
-            container.innerHTML = ''; // Limpa o "Carregando..."
 
-            const headerDiv = document.createElement('div');
-            headerDiv.className = 'col-md-12 row d-flex align-items-center mb-4';
-            headerDiv.innerHTML = `<h2 class="txt-cyan col-md-6 col-sm-12">Gerenciar Medicamentos</h2>
-                                   <a href="/drogaria/medicamento/form-medicamento.html" class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold">
-                                     <i class="fas fa-plus-circle"></i> Cadastrar medicamento
-                                   </a>`;
-            container.appendChild(headerDiv);
+  // Cria modal para o medicamento (simplificado)
+  
 
-            if (!listaMedicamentos || listaMedicamentos.length === 0) {
-                 container.innerHTML += `<p class="text-center text-muted">Nenhum medicamento encontrado.</p>`;
-                 return;
+  async function carregarMedicamentos() {
+    const container = document.getElementById('lista-medicamentos');
+    const modaisContainer = document.getElementById('modais-container');
+    container.innerHTML = '<h2>Carregando...</h2>';
+    modaisContainer.innerHTML = '';
+    
+    try {
+        const response = await fetch('/drogaria/CategoriaServlet');
+        if (!response.ok) throw new Error('Falha ao buscar categorias');
+        listaDeCategorias = await response.json();
+    } catch (error) {
+        console.error("Erro fatal ao carregar categorias:", error);
+        container.innerHTML = '<h2>Erro ao carregar dados essenciais da página.</h2>';
+        return; 
+    }
+    
+    const usuarioLogadoJSON = sessionStorage.getItem("usuarioLogado");
+    const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
+    const isAdmin = usuarioLogado && usuarioLogado.isAdmin;
+	
+    if(!usuarioLogado){
+        let msg = '<div class="col-md-12 row d-flex"><h2 class="txt-cyan text-center col-md-12 col-sm-12">Faça login para ver o conteúdo dessa página</h2>';
+        container.innerHTML = msg + '</div>';
+		return;
+    }
+    
+    try {
+      const response = await fetch('/drogaria/ReadMedicamentoServlet', {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!response.ok) {
+        container.innerHTML = '<h2>Erro ao carregar medicamentos.</h2>';
+        return;
+      }
+
+      const listaMedicamentos = await response.json();
+      container.innerHTML = '';
+      
+      if (!listaMedicamentos || listaMedicamentos.length === 0) {
+          let msg = '<div class="col-md-12 row d-flex"><h2 class="txt-cyan text-center col-md-12 col-sm-12">Nenhum medicamento encontrado</h2>';
+          if (isAdmin) {
+              msg = `<div class="col-md-12 row d-flex"><h2 class="txt-cyan col-md-6 col-sm-12">Nenhum medicamento encontrado</h2>
+                     <a href="/drogaria/medicamento/form-medicamento.html" class="btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0">
+                       <i class="fas fa-plus-circle"></i> Cadastrar medicamento</a>`;
             }
+            container.innerHTML = msg + '</div>';
+      } else {
+          const headerDiv = document.createElement('div');
+          headerDiv.className = 'col-md-12 row d-flex';
+          const h2 = document.createElement('h2');
+          h2.textContent = 'Todos os medicamentos';
+          headerDiv.appendChild(h2);
 
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'row';
-            container.appendChild(rowDiv);
+          if (isAdmin) {
+            h2.className = 'txt-cyan col-md-6 col-sm-12';
+            const cadastrarBtn = document.createElement('a');
+            cadastrarBtn.href = '/drogaria/medicamento/form-medicamento.html';
+            cadastrarBtn.className = 'btn col-md-6 col-sm-12 bg-cyan custom-gradient p-3 text-right font-weight-bold mb-5 mt-0';
+            cadastrarBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Cadastrar medicamento';
+            headerDiv.appendChild(cadastrarBtn);
+          } else {
+            h2.className = 'txt-cyan text-center col-md-12 col-sm-12';
+          }
+              
+          container.appendChild(headerDiv);
 
-            listaMedicamentos.forEach(med => {
-                const card = criaCard(med, usuarioLogado);
-                rowDiv.appendChild(card);
-            });
+        // Container para cards
+          const innerContainer = document.createElement('div');
+          innerContainer.className = 'container mt-5';
+          
+          const rowDiv = document.createElement('div');
+          rowDiv.className = 'row';
 
-        } catch (error) {
-            container.innerHTML = '<h2>Erro inesperado ao carregar medicamentos.</h2>';
-            console.error(error);
-        }
-    });
+        listaMedicamentos.forEach(med => {
+          const card = criarCardMedicamento(med, usuarioLogado);
+          rowDiv.appendChild(card);
+        });
+
+        innerContainer.appendChild(rowDiv);
+        container.appendChild(innerContainer);
+
+        configurarBotoesExcluirMedicamento();
+      }
+    } catch (error) {
+      container.innerHTML = '<h2>Erro inesperado ao carregar medicamentos.</h2>';
+      console.error(error);
+    }
+  }
+
+  document.addEventListener('footer-carregado', carregarMedicamentos);
+  
+  document.addEventListener("footer-carregado", function () {
+	  const modaisContainer = document.getElementById('modais-container');
+	  if (!modaisContainer) return;
+
+	  modaisContainer.addEventListener('submit', async function (e) {
+	    if (e.target.tagName.toLowerCase() !== 'form') return;
+
+	    e.preventDefault();
+
+	    const form = e.target;
+	    const formData = new URLSearchParams();
+
+	    for (const element of form.elements) {
+	      if (element.name && !element.disabled) {
+	        formData.append(element.name, element.value);
+	      }
+	    }
+
+	    try {
+	      const response = await fetch('/drogaria/UpdateMedicamentoServlet', {
+	        method: 'POST',
+	        body: formData
+	      });
+
+	      const json = await response.json();
+
+	      if (json.success) {
+          // Fecha o modal
+	        $(`#${form.closest('.modal').id}`).modal('hide');
+
+	        // Salva mensagem em sessão
+	        sessionStorage.setItem("mensagem", json.message);
+	        sessionStorage.setItem("mensagem-cor", "alert-success");
+	      
+        	// Redireciona para recarregar a lista (e a mensagem será exibida via exibe_mensagem.js)
+          window.location.href = '/drogaria/medicamento/lista-medicamentos.html';
+	      } else {
+	        exibe_mensagem(json.message, "alert-danger");
+	      }
+	    } catch (error) {
+	      console.error('Erro na atualização:', error);
+	      exibe_mensagem("Erro ao atualizar. Tente novamente mais tarde.", "alert-danger");
+	    }
+	  });
+	});
 </script>
 </body>
 </html>

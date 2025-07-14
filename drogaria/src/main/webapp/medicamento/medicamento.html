@@ -31,6 +31,8 @@
 <script src="/drogaria/assets/js/header_footer_include.js"></script>
 <script src="/drogaria/assets/js/sweet_alerts.js"></script>
 <script src="/drogaria/assets/js/medicamento.js"></script>
+<script src="/drogaria/assets/js/exibe_mensagem.js"></script>
+
 <script>
     
     function renderizarPagina(med, usuarioLogado, categoriasMap) {
@@ -41,15 +43,15 @@
         
         let editButtonHtml = '';
         if (usuarioLogado && usuarioLogado.isAdmin) {
-            editButtonHtml = `<a href="#" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#modal-${med.id}"><i class="fas fa-pencil-alt"></i> Editar</a>`;
+            editButtonHtml = `<a href="#" class="btn btn-sm bg-cyan" data-toggle="modal" data-target="#modal-${med.id}"><i class="fas fa-pencil-alt"></i> Editar</a>`;
         }
 
         let precoHtml = '';
         const descontoProduto = med.desconto || 0;
         if (usuarioLogado && descontoProduto > 0) {
             const precoFinal = med.preco * (1 - (descontoProduto / 100));
-            precoHtml = `<h4 class="mb-0"><strong>${formatarPreco(precoFinal)}</strong> <span class="badge badge-danger">-${descontoProduto.toFixed(0)}%</span></h4>
-                         <p class="text-secondary mb-0"><small>De: ${formatarPreco(med.preco)}</small></p>`;
+            precoHtml = `<h4 class="mb-0">${formatarPreco(precoFinal)} <span class="text-danger"><i class="fas fa-tag"></i> -${descontoProduto.toFixed(0)}%</span></h4>
+                         <p class="text-secondary mb-0"><small>De: <s>${formatarPreco(med.preco)}</s></small></p>`;
         } else {
             precoHtml = `<h4>${formatarPreco(med.preco)}</h4>`;
         }
@@ -67,7 +69,7 @@
                             <strong>${c.usuarioNome}</strong>
                             <small class="text-muted">em ${c.data}</small>
                         </div>
-                        ${usuarioLogado && usuarioLogado.isAdmin ? `<button class="btn btn-sm btn-outline-danger btn-excluir-comentario" data-medicamento-id="${med.id}" data-comentario-index="${index}"><i class="fas fa-trash-alt"></i></button>` : ''}
+                        ${usuarioLogado && usuarioLogado.isAdmin ? `<button class="btn btn-sm btn-danger btn-excluir-comentario" data-medicamento-id="${med.id}" data-comentario-index="${index}"><i class="fas fa-trash-alt"></i></button>` : ''}
                     </div>
                     <p class="mb-0 mt-1 bg-light p-2 rounded">${c.texto}</p>
                 </div>
@@ -76,71 +78,107 @@
 
         let formComentarioHtml = '';
         if (usuarioLogado && !usuarioLogado.isAdmin) {
-             formComentarioHtml = `<form class="form-comentario" data-medicamento-id="${med.id}"><div class="form-comentario-wrapper mt-3"><input type="hidden" name="avaliacao" value="5"><input type="text" name="texto" class="form-comentario-input" placeholder="Escreva seu comentário aqui..." required><button type="submit" class="form-comentario-btn"><i class="fas fa-paper-plane"></i></button></div></form>`;
+             formComentarioHtml = `<form class="form-comentario" data-medicamento-id="${med.id}"><div class="form-comentario-wrapper mb-3"><input type="hidden" name="avaliacao" value="5"><input type="text" name="texto" class="form-comentario-input" placeholder="Escreva seu comentário aqui." required><button type="submit" class="form-comentario-btn"><i class="fas fa-paper-plane txt-cyan mr-2"></i></button></div></form>`;
         } else if (usuarioLogado && usuarioLogado.isAdmin) {
-            formComentarioHtml = '<p class="text-info mt-4"><i class="fas fa-info-circle"></i> Administradores não podem adicionar comentários.</p>';
+            formComentarioHtml = '<p class="txt-cyan"><i class="fas fa-info-circle"></i> Administradores não podem adicionar comentários, apenas excluir</p>';
         } else {
-            formComentarioHtml = '<p class="mt-4">Para deixar um comentário, <a href="/drogaria/public/login.html">faça o login</a>.</p>';
+            formComentarioHtml = '<p><a href="/drogaria/public/login.html" class="txt-cyan">Faça login</a> para deixar um comentário</p>';
         }
         
+        if (usuarioLogado){
         container.innerHTML = `
             <div class="row">
-                <div class="col-md-4 text-center">
+                <div class="col-md-6 mb-3">
                     <img src="${imgUrl}" alt="${med.nome}" class="img-fluid rounded border p-2">
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="d-flex justify-content-between align-items-start">
                         <h2 class="mb-2">${med.nome}</h2>
                         ${editButtonHtml}
                     </div>
                     <div class="mb-3">${precoHtml}</div>
                     <hr>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <strong>Princípio Ativo:</strong><br>
-                            <span>${med.principio_ativo}</span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong>Fabricante:</strong><br>
-                            <span>${med.fabricante}</span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong>Forma:</strong><br>
-                            <span>${med.forma}</span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong>Dosagem:</strong><br>
-                            <span>${med.dosagem}</span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong>Lote:</strong><br>
-                            <span>${med.lote}</span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong>Validade:</strong><br>
-                            <span>${validadeFormatada}</span>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <strong>Categoria:</strong><br>
-                            <span class="badge badge-secondary">${categoriaTexto}</span>
-                        </div>
-                        <div class="col-12">
-                            <strong>Indicação:</strong><br>
-                            <span>${med.indicacao}</span>
-                        </div>
+                    <div class=mb-3">
+	              	    <p><span class="badge badge-secondary p-2">${categoriaTexto}</span></p>
+	                </div>
+                   	<div class="mb-3">
+                   		<p><strong>Dosagem: </strong>${med.dosagem}</p>
+                   	</div>
+                    <div class="mb-3">
+                      <p><strong>Forma: </strong>${med.forma}</p>
+                    </div>
+                    <div class="mb-3">
+                      <p><strong>Fabricante: </strong>${med.fabricante}</p>
+                    </div>
+                    <div class="mb-3">
+                      <p><strong>Princípio Ativo: </strong>${med.principio_ativo}</p>
+                    </div>
+                    <div class="mb-3">
+                      <p><strong>Indicação: </strong>${med.indicacao}</p>
+                    </div>
+                    <div class="mb-3">
+                      <p><strong>Lote: </strong>${med.lote}</p>
+                    </div>
+                    <div class="mb-3">
+                      <p><strong>Validade: </strong>${validadeFormatada}</p>
                     </div>
                 </div>
             </div>
             
-            <div class="row mt-4"><div class="col-12">
-                <hr>
-                <h3 class="mt-4">Comentários</h3>
-                <div class="card"><div class="card-body">
+                <div class="card mt-2"><div class="card-body">
+                <h4>Comentários</h4>
+                	${formComentarioHtml}
                     <div class="lista-comentarios">${comentariosHtml}</div>
-                    ${formComentarioHtml}
                 </div></div>
             </div></div>`;
+        }else{
+        	 container.innerHTML = `
+        		    <div class="row">
+        		        <div class="col-md-6 mb-3">
+        		            <img src="${imgUrl}" alt="${med.nome}" class="img-fluid rounded border p-2">
+        		        </div>
+        		        <div class="col-md-6">
+        		            <div class="d-flex justify-content-between align-items-start">
+        		                <h2 class="mb-2">${med.nome}</h2>
+        		            </div>
+        		            <div class="mb-3">${precoHtml}</div>
+        		            <hr>
+        		            <div class="mb-3">
+        		                <p><span class="badge badge-secondary p-2">${categoriaTexto}</span></p>
+        		            </div>
+        		            <div class="mb-3">
+        		                <p><strong>Dosagem: </strong>${med.dosagem}</p>
+        		            </div>
+        		            <div class="mb-4 text-secondary">
+	    		                <p><a href="/drogaria/public/login.html" class="txt-cyan"><i class="fas fa-lock"></i> Faça login</a> para visualizar mais informações</p>
+	    		            </div>
+        		            <div class="mb-3 blur-placeholder">
+        		                <p><strong>Forma: </strong></p>
+        		            </div>
+        		            <div class="mb-3 blur-placeholder">
+        		                <p><strong>Fabricante: </strong></p>
+        		            </div>
+        		            <div class="mb-3 blur-placeholder">
+        		                <p><strong>Princípio Ativo: </strong></p>
+        		            </div>
+        		            <div class="mb-3 blur-placeholder">
+        		                <p><strong>Indicação: </strong></p>
+        		            </div>
+        		            <div class="mb-3 blur-placeholder">
+        		                <p><strong>Lote: </strong></p>
+        		            </div>
+        		            <div class="mb-3 blur-placeholder">
+        		                <p><strong>Validade: </strong></p>
+        		            </div>
+        		        </div>
+        		    </div>
+
+        		    <div class="card mt-2"><div class="card-body">
+        		        <h4>Comentários</h4>
+        		        ${formComentarioHtml}
+        		        <div class="lista-comentarios">${comentariosHtml}</div>
+        		    </div></div>`;
+        		}
     }
     
     let listaDeCategorias = [];

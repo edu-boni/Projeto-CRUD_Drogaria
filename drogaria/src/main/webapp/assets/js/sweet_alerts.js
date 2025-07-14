@@ -78,7 +78,12 @@ function configurarBotoesExcluirComentario() {
           .then(response => response.json().then(data => ({ok: response.ok, data: data})))
           .then(({ok, data}) => {
               if (ok) {
-                  Swal.fire('Excluído!', data.message, 'success');
+					Swal.fire({
+					    title: 'Excluído!',
+					    text: data.message,
+					    icon: 'success',
+					    confirmButtonColor: "#6FB2A4"
+					});
                   const comentarioItem = this.closest('.comentario-item');
                   const hrSeparador = comentarioItem.nextElementSibling; // Pega o <hr> depois do comentário
                   if(hrSeparador && hrSeparador.tagName === 'HR') {

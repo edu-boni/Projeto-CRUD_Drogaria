@@ -142,8 +142,12 @@
           const usuarioLogadoJSON = sessionStorage.getItem('usuarioLogado');
           const usuarioLogado = usuarioLogadoJSON ? JSON.parse(usuarioLogadoJSON) : null;
 
-          const destaque = [...lista].sort((a, b) => (b.desconto || 0) - (a.desconto || 0)).slice(0, 4);
-          const todos = [...lista].slice(0, 8); // Mostra os 8 primeiros na home
+       	  // Últimos 4 medicamentos (mais recentes)
+          const destaque = [...lista].slice(-4).reverse(); // pega os 4 últimos e inverte para mostrar do mais recente ao menos recente
+
+          // Primeiros 8 medicamentos (mais antigos)
+          const todos = [...lista].slice(0, 8);
+
 
           const processarLista = (container, listaDeMeds) => {
             listaDeMeds.forEach(med => {

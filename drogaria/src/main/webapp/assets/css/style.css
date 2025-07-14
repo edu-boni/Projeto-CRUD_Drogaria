@@ -116,3 +116,32 @@ a.card-link, a.card-link:hover {
   color: inherit; /* Herda a cor do texto do pai */
   text-decoration: none; /* Remove o sublinhado */
 }
+
+.blur-placeholder {
+  filter: blur(4px);
+  color: #999 !important;
+  user-select: none;
+  pointer-events: none;
+  position: relative;
+}
+
+.blur-placeholder::after {
+  content: "Lorem ipsum dolor sit amet";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.8);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #333;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.btn-excluir-comentario{
+	display: relative;
+	margin-bottom: -73px;
+	margin-right: 5px;
+}
